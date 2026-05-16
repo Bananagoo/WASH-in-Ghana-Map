@@ -355,15 +355,6 @@ class RouteScreen(BaseScreen):
         # ── Autocollect button ────────────────────────────────────────────
         self._autocollect_btn.draw(surface)
 
-        # ── Footer hint ───────────────────────────────────────────────────
-        if not state.all_stops_complete():
-            hint = ("WASD / arrows to walk  |  Click a stop to open  |  "
-                    "J — journal  |  M — sound  |  F11 — fullscreen")
-        else:
-            hint = "All stops visited!  Open the Systems Map to continue."
-        hint_s = self._font_xs.render(hint, True, C.MID_GREY)
-        surface.blit(hint_s, (C.PAD + 140, h - 18))
-
         # ── Info modal ────────────────────────────────────────────────────
         if self._show_info:
             self._draw_info_modal(surface)

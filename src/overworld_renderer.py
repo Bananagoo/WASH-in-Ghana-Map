@@ -5,7 +5,7 @@ Pre-renders once to a pygame.Surface; route_screen blits it every frame.
 Layers (bottom to top):
   1. Tiled 16px Sunnyside grass (falls back to solid fill)
   2. Bézier dirt path (circle-stamped for smooth round edges)
-  3. Sunnyside tree sprites scattered off the path
+  3. Sunnyside tree, crop, and animal sprites scattered off the path
 """
 import math
 import os
@@ -27,6 +27,17 @@ _TILESET_PATH = "assets/images/tileset/spr_tileset_16px.png"
 _TREE_STRIPS  = [
     ("assets/images/deco/spr_deco_tree_01_strip4.png", 4, 32),
     ("assets/images/deco/spr_deco_tree_02_strip4.png", 4, 28),
+]
+_SCENERY_STRIPS = [
+    ("assets/images/deco/animals/spr_deco_chicken_01_strip4.png", 4, 16, 2),
+    ("assets/images/deco/animals/spr_deco_bird_01_strip4.png", 4, 16, 2),
+    ("assets/images/deco/animals/spr_deco_duck_01_strip4.png", 4, 16, 2),
+]
+_SCENERY_SINGLES = [
+    ("assets/images/deco/crops/sunflower_05.png", 2),
+    ("assets/images/deco/crops/cabbage_05.png", 2),
+    ("assets/images/deco/crops/wheat_05.png", 2),
+    ("assets/images/deco/crops/pumpkin_05.png", 2),
 ]
 
 _TILE_SRC = 16    # atlas tile size
@@ -62,6 +73,7 @@ class OverworldRenderer:
 
         grass_tiles  = _load_grass_tiles()
         tree_sprites = _load_tree_sprites()
+        scenery_sprites = _load_scenery_sprites()
 
         # 1. Grass — fill base colour first so any transparent tile edges
         #    blend with green instead of the default black surface background
@@ -72,8 +84,8 @@ class OverworldRenderer:
         # 2. Path
         self._draw_path(surf, pts, self._curve)
 
-        # 3. Scattered tree sprites
-        self._scatter(surf, pts, self._curve, rng, tree_sprites)
+        # 3. Scattered scenery sprites
+        self._scatter(surf, pts, self._curve, rng, tree_sprites, scenery_sprites)
 
         self._surface = surf
 
@@ -93,36 +105,50 @@ class OverworldRenderer:
 
     @staticmethod
     def _make_curve(stop_pts: list):
+        if len(stop_pts) < 2:
+            return list(stop_pts), []
+
         out = [stop_pts[0]]
         seg_lengths = []
-        alt = 1
-        rng = random.Random(17)
 
-        for a, b in zip(stop_pts, stop_pts[1:]):
-            ax, ay = a
-            bx, by = b
+        # Cubic Hermite interpolation gives each stop a shared incoming/outgoing
+        # tangent, avoiding hard corners while keeping the route organic.
+        for i in range(len(stop_pts) - 1):
+            p0 = stop_pts[max(i - 1, 0)]
+            p1 = stop_pts[i]
+            p2 = stop_pts[i + 1]
+            p3 = stop_pts[min(i + 2, len(stop_pts) - 1)]
+
+            ax, ay = p1
+            bx, by = p2
             dist = math.hypot(bx - ax, by - ay)
-            is_horiz = abs(bx - ax) > abs(by - ay) * 1.4
-
-            if is_horiz:
-                mx, my = (ax + bx) / 2, (ay + by) / 2
-                ctrl   = (mx, my + 42 * alt)
-                alt    = -alt
-            else:
-                dx, dy = bx - ax, by - ay
-                length = max(dist, 1)
-                px, py = -dy / length, dx / length
-                mx, my = (ax + bx) / 2, (ay + by) / 2
-                off    = rng.uniform(24, 40) * alt
-                ctrl   = (mx + px * off, my + py * off)
-
-            n = max(12, int(dist / 4))
+            n = max(18, int(dist / 3))
             seg_lengths.append(n)
+
+            m1 = ((p2[0] - p0[0]) * 0.34, (p2[1] - p0[1]) * 0.34)
+            m2 = ((p3[0] - p1[0]) * 0.34, (p3[1] - p1[1]) * 0.34)
+            dx, dy = bx - ax, by - ay
+            length = max(math.hypot(dx, dy), 1)
+            nx, ny = -dy / length, dx / length
+            bend = 18 * (-1 if i % 2 else 1)
+
             for j in range(1, n + 1):
-                t  = j / n
-                cx = (1-t)**2*ax + 2*(1-t)*t*ctrl[0] + t**2*bx
-                cy = (1-t)**2*ay + 2*(1-t)*t*ctrl[1] + t**2*by
-                out.append((int(cx), int(cy)))
+                t = j / n
+                t2 = t * t
+                t3 = t2 * t
+                h00 = 2*t3 - 3*t2 + 1
+                h10 = t3 - 2*t2 + t
+                h01 = -2*t3 + 3*t2
+                h11 = t3 - t2
+                cx = h00*p1[0] + h10*m1[0] + h01*p2[0] + h11*m2[0]
+                cy = h00*p1[1] + h10*m1[1] + h01*p2[1] + h11*m2[1]
+
+                wave = (math.sin(math.pi * t) ** 2) * bend
+                if abs(dx) > abs(dy) * 1.2:
+                    cx += nx * wave
+                    cy += ny * wave
+
+                out.append((round(cx), round(cy)))
 
         return out, seg_lengths
 
@@ -145,21 +171,41 @@ class OverworldRenderer:
 
     # ── Scatter ───────────────────────────────────────────────────────────────
 
-    def _scatter(self, surf, stop_pts, curve, rng, tree_sprites):
-        if not tree_sprites:
-            return
+    def _scatter(self, surf, stop_pts, curve, rng, tree_sprites, scenery_sprites):
         placed: list = []
-        for _ in range(800):
+
+        if tree_sprites:
+            self._scatter_group(
+                surf, stop_pts, curve, rng, tree_sprites, placed,
+                attempts=800, stop_clearance=100, path_clearance=55,
+                object_clearance=54, max_count=48,
+            )
+
+        if scenery_sprites:
+            self._scatter_group(
+                surf, stop_pts, curve, rng, scenery_sprites, placed,
+                attempts=240, stop_clearance=74, path_clearance=42,
+                object_clearance=78, max_count=24,
+            )
+
+    def _scatter_group(self, surf, stop_pts, curve, rng, sprites, placed,
+                       attempts, stop_clearance, path_clearance, object_clearance,
+                       max_count):
+        count = 0
+        for _ in range(attempts):
+            if count >= max_count:
+                return
             x = rng.randint(12, self._w - 12)
             y = rng.randint(12, self._h - 12)
-            if any(math.hypot(x-px, y-py) < 100 for px, py in stop_pts):
+            if any(math.hypot(x-px, y-py) < stop_clearance for px, py in stop_pts):
                 continue
-            if _near_seg(x, y, stop_pts, 55):
+            if _near_points(x, y, curve, path_clearance):
                 continue
-            if any(math.hypot(x-ox, y-oy) < 54 for ox, oy in placed):
+            if any(math.hypot(x-ox, y-oy) < object_clearance for ox, oy in placed):
                 continue
-            _blit_tree_sprite(surf, x, y, rng.choice(tree_sprites))
+            _blit_sprite(surf, x, y, rng.choice(sprites))
             placed.append((x, y))
+            count += 1
 
 
 # ── Asset loaders ─────────────────────────────────────────────────────────────
@@ -242,8 +288,38 @@ def _load_tree_sprites() -> list:
     return sprites
 
 
-def _blit_tree_sprite(surf: pygame.Surface, x: int, y: int,
-                      spr: pygame.Surface):
+def _load_scenery_sprites() -> list:
+    sprites = []
+
+    for path, n_frames, fw, scale in _SCENERY_STRIPS:
+        if not os.path.exists(path):
+            continue
+        try:
+            sheet = pygame.image.load(path).convert_alpha()
+            fh = sheet.get_height()
+            for i in range(n_frames):
+                frame = sheet.subsurface(
+                    pygame.Rect(i * fw, 0, fw, fh)).copy()
+                sprites.append(
+                    pygame.transform.scale(frame, (fw * scale, fh * scale)))
+        except Exception:
+            pass
+
+    for path, scale in _SCENERY_SINGLES:
+        if not os.path.exists(path):
+            continue
+        try:
+            img = pygame.image.load(path).convert_alpha()
+            iw, ih = img.get_size()
+            sprites.append(pygame.transform.scale(img, (iw * scale, ih * scale)))
+        except Exception:
+            pass
+
+    return sprites
+
+
+def _blit_sprite(surf: pygame.Surface, x: int, y: int,
+                 spr: pygame.Surface):
     sw, sh = spr.get_size()
     surf.blit(spr, (x - sw // 2, y - sh))
 
@@ -262,5 +338,15 @@ def _near_seg(x, y, pts, threshold):
             t = max(0.0, min(1.0, ((x-ax)*dx + (y-ay)*dy) / sq))
             d = math.hypot(x-(ax+t*dx), y-(ay+t*dy))
         if d < threshold:
+            return True
+    return False
+
+
+def _near_points(x, y, pts, threshold):
+    threshold_sq = threshold * threshold
+    for px, py in pts:
+        dx = x - px
+        dy = y - py
+        if dx * dx + dy * dy < threshold_sq:
             return True
     return False
