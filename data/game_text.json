@@ -1,0 +1,55 @@
+{
+  "title": "Mapping WASH",
+  "subtitle": "A Systems Journey Through Ghana",
+  "course": "SYDE 599 — Systems Studies in Water, Environment, and Health",
+
+  "tutorial": [
+    "Before this course, I understood WASH mostly through infrastructure: filters, pipes, toilets, treatment plants, and water quality tools.",
+    "This game follows my field course in Ghana — 16 stops, 16 tokens, one connected system.",
+    "At each stop, you will read a field note and collect a token. Once all tokens are collected, you will map them to system categories.",
+    "Your goal: understand that WASH is not only about infrastructure. It is shaped by health, governance, culture, gender, climate, livelihoods, and knowledge.",
+    "Press SPACE or click START to begin your journey."
+  ],
+
+  "route_instructions": "Click the highlighted stop to open your field note. Collect the token to unlock the next stop.",
+  "stop_collect_button": "Collect Token",
+  "stop_back_button": "Back to Route",
+  "journal_title": "Field Journal",
+  "journal_empty": "No tokens collected yet. Visit your first stop.",
+  "journal_back_button": "Back",
+  "map_title": "Build Your Systems Map",
+  "map_instructions": "Select a token from your journal, then click a system category to place it. Each token belongs to at least one category — choose the one that fits best.",
+  "map_select_prompt": "Select a token from the list on the left.",
+  "map_token_placed": "Token placed! Select another or click Finish when done.",
+  "map_finish_button": "Finish Map",
+  "map_back_button": "Back to Journal",
+
+  "feedback_title": "How did your map compare?",
+  "feedback_intro": "Here is how your placements compare to the primary category from the field notes.",
+  "feedback_score_label": "Your score",
+  "feedback_correct_label": "correct placements",
+  "feedback_token_column": "Token",
+  "feedback_your_column": "Your Choice",
+  "feedback_key_column": "Primary Category",
+  "feedback_next_button": "See Final Reflection",
+  "feedback_restart_button": "Play Again",
+
+  "final_title": "A System, Not a Sector",
+  "final_takeaway": [
+    "Sustainable WASH work cannot be designed from one lens alone.",
+    "It requires technical knowledge, community trust, cultural understanding, long-term financing, attention to gendered burdens, and awareness of the social and environmental systems around water.",
+    "Each stop on this route added one lens.",
+    "Water quality connected to health. Sanitation connected to governance. Clinics connected to infrastructure and inequity. Gender and WASH connected to labour, dignity, and safety. Climate and livelihoods connected water to agriculture, flooding, forests, and economic survival.",
+    "No single token captures the whole system. That is the point."
+  ],
+  "final_credit": "SYDE 599 Knowledge Mobilization — Katherine Langille, 2025",
+  "final_restart_button": "Play Again",
+
+  "feedback_messages": {
+    "perfect": "You mapped every token to its primary system node. You have a strong sense of how these pieces connect.",
+    "high": "Most of your placements matched the key categories. WASH systems are complex — some tokens genuinely fit multiple nodes.",
+    "mid": "A few placements differed from the primary categories. The connections in WASH systems are not always obvious. Review the field notes to see what you might have missed.",
+    "low": "Several placements differed from the primary categories. Consider re-reading the field notes — each stop reveals a different dimension of the WASH system.",
+    "note": "Note: many tokens belong to multiple categories. This score reflects primary categorization only."
+  }
+}

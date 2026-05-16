@@ -1,0 +1,17 @@
+SCREEN_TITLE = "title"
+SCREEN_ROUTE = "route"
+SCREEN_STOP = "stop"
+SCREEN_JOURNAL = "journal"
+SCREEN_MAP = "systems_map"
+SCREEN_FEEDBACK = "feedback"
+SCREEN_FINAL = "final"
+
+ALL_SCREENS = [
+    SCREEN_TITLE,
+    SCREEN_ROUTE,
+    SCREEN_STOP,
+    SCREEN_JOURNAL,
+    SCREEN_MAP,
+    SCREEN_FEEDBACK,
+    SCREEN_FINAL,
+]

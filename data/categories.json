@@ -1,0 +1,58 @@
+[
+  {
+    "id": "health",
+    "name": "Health",
+    "description": "Waterborne disease, sanitation access, hygiene behaviour, healthcare systems, and physical and mental well-being shaped by water.",
+    "color": [220, 80, 80],
+    "map_position": { "x": 100, "y": 140 }
+  },
+  {
+    "id": "infrastructure",
+    "name": "Infrastructure",
+    "description": "Pipes, treatment plants, latrines, sanitation chains, water points, and the physical systems that move water and waste.",
+    "color": [80, 130, 200],
+    "map_position": { "x": 330, "y": 140 }
+  },
+  {
+    "id": "governance",
+    "name": "Governance",
+    "description": "Policy, regulation, accountability, financing, data systems, and the institutions that manage water and sanitation services.",
+    "color": [180, 100, 200],
+    "map_position": { "x": 560, "y": 140 }
+  },
+  {
+    "id": "culture",
+    "name": "Culture",
+    "description": "History, identity, tradition, spiritual relationships with water, and the social meanings that shape how water is used, protected, and understood.",
+    "color": [200, 150, 60],
+    "map_position": { "x": 100, "y": 320 }
+  },
+  {
+    "id": "gender",
+    "name": "Gender",
+    "description": "Gendered labour in water collection and care work, safety, dignity, women's participation in WASH decisions, and unequal burden-sharing.",
+    "color": [220, 100, 160],
+    "map_position": { "x": 330, "y": 320 }
+  },
+  {
+    "id": "climate",
+    "name": "Climate",
+    "description": "Rainfall variability, drought, flooding, ecosystem health, land use, and the environmental systems that shape water availability.",
+    "color": [60, 170, 120],
+    "map_position": { "x": 560, "y": 320 }
+  },
+  {
+    "id": "livelihoods",
+    "name": "Livelihoods",
+    "description": "Agriculture, income, economic survival, resource recovery, water-food linkages, and the ways water connects to how people earn and sustain life.",
+    "color": [180, 160, 60],
+    "map_position": { "x": 100, "y": 500 }
+  },
+  {
+    "id": "knowledge",
+    "name": "Knowledge / Collaboration",
+    "description": "Research, data, education, community knowledge, Indigenous perspectives, knowledge mobilization, and the collaborative production of understanding.",
+    "color": [80, 160, 200],
+    "map_position": { "x": 330, "y": 500 }
+  }
+]
