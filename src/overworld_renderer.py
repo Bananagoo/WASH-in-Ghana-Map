@@ -29,15 +29,17 @@ _TREE_STRIPS  = [
     ("assets/images/deco/spr_deco_tree_02_strip4.png", 4, 28),
 ]
 _SCENERY_STRIPS = [
-    ("assets/images/deco/animals/spr_deco_chicken_01_strip4.png", 4, 16, 2),
-    ("assets/images/deco/animals/spr_deco_bird_01_strip4.png", 4, 16, 2),
-    ("assets/images/deco/animals/spr_deco_duck_01_strip4.png", 4, 16, 2),
+    ("assets/images/deco/animals/spr_deco_chicken_01_strip4.png", 4, 32),
+    ("assets/images/deco/animals/spr_deco_bird_01_strip4.png", 4, 16),
+    ("assets/images/deco/animals/spr_deco_duck_01_strip4.png", 4, 16),
+    ("assets/images/deco/spr_deco_mushroom_blue_01_strip4.png", 4, 16),
+    ("assets/images/deco/spr_deco_mushroom_red_01_strip4.png", 4, 16),
 ]
 _SCENERY_SINGLES = [
-    ("assets/images/deco/crops/sunflower_05.png", 2),
-    ("assets/images/deco/crops/cabbage_05.png", 2),
-    ("assets/images/deco/crops/wheat_05.png", 2),
-    ("assets/images/deco/crops/pumpkin_05.png", 2),
+    "assets/images/deco/crops/sunflower_05.png",
+    "assets/images/deco/crops/cabbage_05.png",
+    "assets/images/deco/crops/wheat_05.png",
+    "assets/images/deco/crops/pumpkin_05.png",
 ]
 
 _TILE_SRC = 16    # atlas tile size
@@ -185,7 +187,7 @@ class OverworldRenderer:
             self._scatter_group(
                 surf, stop_pts, curve, rng, scenery_sprites, placed,
                 attempts=240, stop_clearance=74, path_clearance=42,
-                object_clearance=78, max_count=24,
+                object_clearance=84, max_count=14,
             )
 
     def _scatter_group(self, surf, stop_pts, curve, rng, sprites, placed,
@@ -195,15 +197,17 @@ class OverworldRenderer:
         for _ in range(attempts):
             if count >= max_count:
                 return
-            x = rng.randint(12, self._w - 12)
-            y = rng.randint(12, self._h - 12)
+            spr = rng.choice(sprites)
+            sw, sh = spr.get_size()
+            x = rng.randint(max(12, sw // 2), max(12, self._w - sw // 2))
+            y = rng.randint(max(12, sh), max(12, self._h - 12))
             if any(math.hypot(x-px, y-py) < stop_clearance for px, py in stop_pts):
                 continue
             if _near_points(x, y, curve, path_clearance):
                 continue
             if any(math.hypot(x-ox, y-oy) < object_clearance for ox, oy in placed):
                 continue
-            _blit_sprite(surf, x, y, rng.choice(sprites))
+            _blit_sprite(surf, x, y, spr)
             placed.append((x, y))
             count += 1
 
@@ -289,33 +293,121 @@ def _load_tree_sprites() -> list:
 
 
 def _load_scenery_sprites() -> list:
-    sprites = []
+    strip_frames = {}
+    singles = {}
 
-    for path, n_frames, fw, scale in _SCENERY_STRIPS:
+    for path, n_frames, fw in _SCENERY_STRIPS:
         if not os.path.exists(path):
             continue
         try:
             sheet = pygame.image.load(path).convert_alpha()
             fh = sheet.get_height()
+            frames = []
             for i in range(n_frames):
                 frame = sheet.subsurface(
                     pygame.Rect(i * fw, 0, fw, fh)).copy()
-                sprites.append(
-                    pygame.transform.scale(frame, (fw * scale, fh * scale)))
+                frames.append(frame)
+            strip_frames[path] = frames
         except Exception:
             pass
 
-    for path, scale in _SCENERY_SINGLES:
+    for path in _SCENERY_SINGLES:
         if not os.path.exists(path):
             continue
         try:
-            img = pygame.image.load(path).convert_alpha()
-            iw, ih = img.get_size()
-            sprites.append(pygame.transform.scale(img, (iw * scale, ih * scale)))
+            singles[path] = pygame.image.load(path).convert_alpha()
         except Exception:
             pass
 
-    return sprites
+    sprites = []
+
+    chicken = strip_frames.get("assets/images/deco/animals/spr_deco_chicken_01_strip4.png", [])
+    duck = strip_frames.get("assets/images/deco/animals/spr_deco_duck_01_strip4.png", [])
+    bird = strip_frames.get("assets/images/deco/animals/spr_deco_bird_01_strip4.png", [])
+    mushroom_blue = strip_frames.get("assets/images/deco/spr_deco_mushroom_blue_01_strip4.png", [])
+    mushroom_red = strip_frames.get("assets/images/deco/spr_deco_mushroom_red_01_strip4.png", [])
+
+    if chicken:
+        sprites.extend([
+            _make_cluster([
+                (_scaled(chicken[0], 1.5), 18, 18),
+                (_scaled(chicken[1], 0.8), 2, 28),
+                (_scaled(chicken[2], 0.8), 42, 30),
+            ]),
+            _make_cluster([
+                (_scaled(chicken[2], 1.35), 10, 20),
+                (_scaled(chicken[3], 0.75), 38, 34),
+            ]),
+        ])
+
+    if duck:
+        sprites.append(_make_cluster([
+            (_scaled(duck[0], 1.7), 6, 10),
+            (_scaled(duck[1], 1.45), 36, 18),
+        ]))
+
+    if bird:
+        sprites.append(_make_cluster([
+            (_scaled(bird[0], 1.5), 8, 12),
+            (_scaled(bird[2], 1.25), 34, 20),
+        ]))
+
+    sunflower = singles.get("assets/images/deco/crops/sunflower_05.png")
+    if sunflower:
+        sprites.extend([
+            _make_cluster([
+                (_scaled(sunflower, 1.7), 12, 8),
+                (_scaled(sunflower, 1.45), 32, 16),
+                (_scaled(sunflower, 1.25), 4, 20),
+            ]),
+            _make_cluster([
+                (_scaled(sunflower, 1.6), 4, 10),
+                (_scaled(sunflower, 1.6), 24, 6),
+            ]),
+        ])
+
+    cabbage = singles.get("assets/images/deco/crops/cabbage_05.png")
+    pumpkin = singles.get("assets/images/deco/crops/pumpkin_05.png")
+    wheat = singles.get("assets/images/deco/crops/wheat_05.png")
+    crop_imgs = [img for img in (cabbage, pumpkin, wheat) if img]
+    if crop_imgs:
+        sprites.append(_make_cluster([
+            (_scaled(crop_imgs[0], 1.6), 4, 12),
+            (_scaled(crop_imgs[min(1, len(crop_imgs) - 1)], 1.45), 24, 18),
+            (_scaled(crop_imgs[-1], 1.5), 42, 10),
+        ]))
+
+    mushrooms = mushroom_blue[:2] + mushroom_red[:2]
+    if mushrooms:
+        sprites.append(_make_cluster([
+            (_scaled(mushrooms[0], 1.4), 4, 12),
+            (_scaled(mushrooms[min(1, len(mushrooms) - 1)], 1.2), 22, 16),
+            (_scaled(mushrooms[-1], 1.3), 38, 10),
+        ]))
+
+    return [spr for spr in sprites if spr.get_width() and spr.get_height()]
+
+
+def _scaled(spr: pygame.Surface, scale: float) -> pygame.Surface:
+    sw, sh = spr.get_size()
+    return pygame.transform.scale(
+        spr, (max(1, round(sw * scale)), max(1, round(sh * scale))))
+
+
+def _make_cluster(items: list[tuple[pygame.Surface, int, int]]) -> pygame.Surface:
+    if not items:
+        return pygame.Surface((1, 1), pygame.SRCALPHA)
+
+    min_x = min(x for _, x, _ in items)
+    min_y = min(y for _, _, y in items)
+    max_x = max(x + spr.get_width() for spr, x, _ in items)
+    max_y = max(y + spr.get_height() for spr, _, y in items)
+    cluster = pygame.Surface((max_x - min_x, max_y - min_y), pygame.SRCALPHA)
+
+    for spr, x, y in sorted(items, key=lambda item: item[2] + item[0].get_height()):
+        cluster.blit(spr, (x - min_x, y - min_y))
+
+    return cluster
 
 
 def _blit_sprite(surf: pygame.Surface, x: int, y: int,

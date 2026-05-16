@@ -307,10 +307,6 @@ class RouteScreen(BaseScreen):
 
             pygame.draw.circle(surface, interior, (sx, sy), _MR)
 
-            # Small specular highlight dot (drawn directly — no SRCALPHA)
-            pygame.draw.circle(surface, (210, 205, 195),
-                               (sx - _MR//3, sy - _MR//3), _MR//4)
-
             num_s = self._font_xs.render(str(stop.id), True, C.WHITE)
             surface.blit(num_s, num_s.get_rect(center=(sx, sy)))
 
