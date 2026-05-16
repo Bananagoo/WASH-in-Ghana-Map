@@ -310,14 +310,6 @@ class RouteScreen(BaseScreen):
             num_s = self._font_xs.render(str(stop.id), True, C.WHITE)
             surface.blit(num_s, num_s.get_rect(center=(sx, sy)))
 
-            if completed:
-                # Drawn checkmark badge (avoids ✓ glyph rendering as a box)
-                ck_x, ck_y = sx + _MR, sy - _MR
-                pygame.draw.lines(surface, C.GOLD_LIGHT, False,
-                                  [(ck_x - 4, ck_y),
-                                   (ck_x - 1, ck_y + 3),
-                                   (ck_x + 4, ck_y - 4)], 2)
-
         # ── Player sprite ─────────────────────────────────────────────────
         px, py = self._controller.position
         self._sprite.draw(
