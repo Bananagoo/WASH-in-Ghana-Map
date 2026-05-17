@@ -145,8 +145,17 @@ class TitleScreen(BaseScreen):
             )
             ty += 8
 
-        total_text_h = (ty + self._text_scroll) - text_clip.top
-        self._max_text_scroll = max(0, total_text_h - text_clip.height)
+        # Measure total height at scroll=0 to avoid wrap-dependent feedback loop
+        if not self._max_text_scroll:
+            my = text_clip.top
+            for line in self._tutorial_lines:
+                my = _draw_wrapped_around_image(
+                    None, line, self._font_sm, C.OFF_WHITE,
+                    text_x, my, full_text_w, side_text_w, image_rect,
+                    line_spacing=5,
+                )
+                my += 8
+            self._max_text_scroll = max(0, (my - text_clip.top) - text_clip.height)
 
         surface.set_clip(None)
 
@@ -165,6 +174,7 @@ class TitleScreen(BaseScreen):
 
 def _draw_wrapped_around_image(surface, text, font, colour, x, y,
                                full_w, side_w, image_rect, line_spacing=4):
+    """Draw text wrapping around image_rect. Pass surface=None for a dry-run measurement."""
     words = text.split()
     current = []
 
@@ -182,12 +192,14 @@ def _draw_wrapped_around_image(surface, text, font, colour, x, y,
             continue
 
         line = " ".join(current)
-        surface.blit(font.render(line, True, colour), (x, y))
+        if surface is not None:
+            surface.blit(font.render(line, True, colour), (x, y))
         y += font.get_height() + line_spacing
         current = [word]
 
     if current:
-        surface.blit(font.render(" ".join(current), True, colour), (x, y))
+        if surface is not None:
+            surface.blit(font.render(" ".join(current), True, colour), (x, y))
         y += font.get_height() + line_spacing
 
     return y

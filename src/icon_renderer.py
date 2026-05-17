@@ -42,13 +42,13 @@ def get_icon_type(stop_id: int, override: str = "") -> str:
 
 
 def draw_icon(surface: pygame.Surface, cx: int, cy: int,
-              icon_type: str, size: int = 34, dimmed: bool = False):
+              icon_type: str, size: int = 34, dimmed: bool = False,
+              badge: pygame.Surface = None):
     """
     Draw a small wooden-sign icon centred at (cx, cy).
 
-    Draws directly onto surface — no SRCALPHA intermediate — to avoid
-    black-box transparency artefacts on pygame 2.0.x.
-    Icon content is clipped to the sign board using surface.set_clip().
+    If badge is provided, the token badge is scaled onto the sign board
+    instead of the procedural icon — the post and board frame are kept.
     """
     sw = size + 2    # board width
     sh = size - 4    # board height
@@ -70,18 +70,23 @@ def draw_icon(surface: pygame.Surface, cx: int, cy: int,
                      (cx - sw // 2 + 2, cy - sh // 2 + 2),
                      (cx + sw // 2 - 2, cy - sh // 2 + 2), 1)
 
-    # Icon graphic — clipped so it can't bleed outside the board
-    old_clip = surface.get_clip()
-    surface.set_clip(board_rect)
-    drawer = _DRAWERS.get(icon_type, _default)
-    drawer(surface, cx, cy, sh // 2 - 2)
-    surface.set_clip(old_clip)
+    if badge is not None:
+        # Scale token badge to fit inside the board, then blit centred
+        fit = min(sw - 4, sh - 4)
+        scaled = pygame.transform.smoothscale(badge, (fit, fit))
+        surface.blit(scaled, scaled.get_rect(center=(cx, cy)))
+    else:
+        # Procedural icon graphic — clipped to the sign board
+        old_clip = surface.get_clip()
+        surface.set_clip(board_rect)
+        drawer = _DRAWERS.get(icon_type, _default)
+        drawer(surface, cx, cy, sh // 2 - 2)
+        surface.set_clip(old_clip)
 
     # Rim outline drawn after icon so it's always visible on top
     pygame.draw.rect(surface, rim_col, board_rect, 1, border_radius=3)
 
-    # Dim overlay for locked stops.
-    # Uses surface-wide alpha (NOT SRCALPHA per-pixel) — reliable on all versions.
+    # Dim overlay for locked stops
     if dimmed:
         dim = pygame.Surface((sw, sh)).convert()
         dim.fill((55, 45, 30))

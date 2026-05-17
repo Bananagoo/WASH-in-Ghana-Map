@@ -20,8 +20,8 @@ _CAT_COLOURS = {
 }
 
 # Secondary image display size (for Stop 9 treatment diagram)
-_SEC_IMG_W = 560
-_SEC_IMG_H = 300
+_SEC_IMG_W = 680
+_SEC_IMG_H = 380
 
 
 class StopScreen(BaseScreen):
@@ -209,64 +209,113 @@ class StopScreen(BaseScreen):
         surface.set_clip(clip_rect)
 
         y = content_top + 8 - self._scroll_y
+        cpd = 40  # wider left/right margin for scrollable content
 
         def section(label, body, text_col=C.DARK_GREY):
             nonlocal y
             lbl = self._font_xs.render(label.upper(), True, C.MID_GREY)
-            surface.blit(lbl, (pad, y))
+            surface.blit(lbl, (cpd, y))
             y += lbl.get_height() + 2
             y = draw_wrapped_text(surface, body, self._font_sm, text_col,
-                                  pad, y, w - pad * 2, line_spacing=4)
+                                  cpd, y, w - cpd * 2, line_spacing=4)
             y += C.PAD_SM
 
         section("Key Learning", stop.key_learning, C.TEAL_DARK)
         section("Key Concepts", stop.course_concept)
 
-        # Field Note box
+        # Field Note box (includes secondary image for Weija stop)
         note_lbl = self._font_xs.render("FIELD NOTE", True, C.MID_GREY)
-        surface.blit(note_lbl, (pad, y))
+        surface.blit(note_lbl, (cpd, y))
         y += note_lbl.get_height() + 4
 
-        note_lines = _wrap(stop.reflection, self._font_sm, w - pad * 2 - C.PAD * 2)
-        note_h = len(note_lines) * (self._font_sm.get_height() + 4) + C.PAD * 2
-        note_rect = pygame.Rect(pad, y, w - pad * 2, note_h)
+        inner_w   = w - cpd * 2 - C.PAD * 2
+        note_lines = _wrap(stop.reflection, self._font_sm, inner_w)
+
+        # Measure field note box height (reflection text + optional diagram)
+        text_block_h = len(note_lines) * (self._font_sm.get_height() + 4)
+        diagram_block_h = 0
+        if self._secondary_image:
+            siw, sih = self._secondary_image.get_size()
+            diag_caption = ("Intake and pumping → Coagulation (alum) → Flocculation → "
+                            "Filtration → Chlorination → Quality assessment before distribution.")
+            cap_lines = _wrap(diag_caption, self._font_xs, inner_w)
+            cap_h = len(cap_lines) * (self._font_xs.get_height() + 3)
+            diagram_block_h = C.PAD_SM + sih + C.PAD_SM + cap_h + C.PAD_SM
+
+        note_h    = C.PAD * 2 + text_block_h + diagram_block_h
+        note_rect = pygame.Rect(cpd, y, w - cpd * 2, note_h)
         pygame.draw.rect(surface, C.PANEL_COLOUR, note_rect, border_radius=6)
         pygame.draw.rect(surface, C.GOLD, note_rect, width=2, border_radius=6)
+
         ny = y + C.PAD
         for line in note_lines:
             ls = self._font_sm.render(line, True, C.DARK_GREY)
-            surface.blit(ls, (pad + C.PAD, ny))
+            surface.blit(ls, (cpd + C.PAD, ny))
             ny += self._font_sm.get_height() + 4
+
+        # Treatment diagram inside the field note box
+        if self._secondary_image:
+            ny += C.PAD_SM
+            siw, sih = self._secondary_image.get_size()
+            six = cpd + C.PAD + (inner_w - siw) // 2
+            surface.blit(self._secondary_image, (six, ny))
+            pygame.draw.rect(surface, C.TEAL, pygame.Rect(six, ny, siw, sih), 2, border_radius=4)
+            ny += sih + C.PAD_SM
+            for line in cap_lines:
+                cs = self._font_xs.render(line, True, C.MID_GREY)
+                surface.blit(cs, cs.get_rect(centerx=note_rect.centerx, top=ny))
+                ny += self._font_xs.get_height() + 3
+
         y = note_rect.bottom + C.PAD_SM
 
-        # Secondary image (treatment process diagram — Stop 9)
-        if self._secondary_image:
-            sec_lbl = self._font_xs.render("TREATMENT PROCESS", True, C.MID_GREY)
-            surface.blit(sec_lbl, (pad, y))
-            y += sec_lbl.get_height() + 4
-            siw, sih = self._secondary_image.get_size()
-            six = pad + (_SEC_IMG_W - siw) // 2
-            surface.blit(self._secondary_image, (six, y))
-            pygame.draw.rect(surface, C.TEAL, pygame.Rect(six, y, siw, sih), 2, border_radius=4)
-            y += sih + C.PAD_SM
-            desc = ("Intake and pumping → Coagulation (alum) → Flocculation → "
-                    "Filtration → Chlorination → Quality assessment before distribution.")
-            y = draw_wrapped_text(surface, desc, self._font_xs, C.MID_GREY,
-                                  pad, y, w - pad * 2, line_spacing=3)
-            y += C.PAD_SM
+        # Peer spotlight bubble
+        if stop.peer_spotlight_name:
+            sp_lbl = self._font_xs.render("PEER SPOTLIGHT", True, C.MID_GREY)
+            surface.blit(sp_lbl, (cpd, y))
+            y += sp_lbl.get_height() + 4
+
+            sp_inner_w = w - cpd * 2 - C.PAD * 2
+            ctx_lines  = _wrap(stop.peer_spotlight_context, self._font_xs, sp_inner_w)
+            qt_lines   = _wrap(stop.peer_spotlight_quote,   self._font_sm, sp_inner_w)
+
+            ctx_h = len(ctx_lines) * (self._font_xs.get_height() + 3)
+            qt_h  = len(qt_lines)  * (self._font_sm.get_height() + 4)
+            name_h = self._font_xs.get_height()
+            sp_h  = C.PAD + name_h + 6 + ctx_h + C.PAD_SM + qt_h + C.PAD
+
+            sp_rect = pygame.Rect(cpd, y, w - cpd * 2, sp_h)
+            pygame.draw.rect(surface, (235, 228, 248), sp_rect, border_radius=8)
+            pygame.draw.rect(surface, (160, 120, 200), sp_rect, width=2, border_radius=8)
+
+            sy = y + C.PAD
+            name_s = self._font_xs.render(f"— {stop.peer_spotlight_name}", True, (130, 80, 185))
+            surface.blit(name_s, (cpd + C.PAD, sy))
+            sy += name_s.get_height() + 6
+
+            for line in ctx_lines:
+                ls = self._font_xs.render(line, True, C.DARK_GREY)
+                surface.blit(ls, (cpd + C.PAD, sy))
+                sy += self._font_xs.get_height() + 3
+
+            sy += C.PAD_SM
+            for line in qt_lines:
+                ls = self._font_sm.render(line, True, (60, 40, 90))
+                surface.blit(ls, (cpd + C.PAD, sy))
+                sy += self._font_sm.get_height() + 4
+
+            y = sp_rect.bottom + C.PAD_SM
 
         # References
         if stop.references:
             ref_lbl = self._font_xs.render("REFERENCES", True, C.MID_GREY)
-            surface.blit(ref_lbl, (pad, y))
+            surface.blit(ref_lbl, (cpd, y))
             y += ref_lbl.get_height() + 4
-            pygame.draw.line(surface, C.LIGHT_GREY, (pad, y), (w - pad, y))
+            pygame.draw.line(surface, C.LIGHT_GREY, (cpd, y), (w - cpd, y))
             y += 4
             for ref in stop.references:
-                ref_text = ref
                 y = draw_wrapped_text(
-                    surface, ref_text, self._font_xs, C.MID_GREY,
-                    pad, y, w - pad * 2, line_spacing=2,
+                    surface, ref, self._font_xs, C.MID_GREY,
+                    cpd, y, w - cpd * 2, line_spacing=2,
                 )
                 y += 3
 

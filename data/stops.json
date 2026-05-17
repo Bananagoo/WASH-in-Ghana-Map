@@ -6,7 +6,11 @@
     "icon_label": "BOOK",
     "emoji": "📘",
     "wash_focus": "Cross-cutting",
-    "main_categories": ["Data, Knowledge & Collaboration", "Culture, History & Place", "Governance, Finance & Institutions"],
+    "main_categories": [
+      "Data, Knowledge & Collaboration",
+      "Culture, History & Place",
+      "Governance, Finance & Institutions"
+    ],
     "primary_category": "Data, Knowledge & Collaboration",
     "purpose": "Introduce the WASH system as shaped by more than infrastructure.",
     "key_learning": "WASH depends on hardware (infrastructure) and software (governance, trust, education, behaviour change). Neither works without the other.",
@@ -22,7 +26,10 @@
     "reading_tie": "",
     "image": "photos/image1.jpeg",
     "token_image": "",
-    "route_position": { "x": 100, "y": 160 }
+    "route_position": {
+      "x": 100,
+      "y": 160
+    }
   },
   {
     "id": 2,
@@ -31,7 +38,11 @@
     "icon_label": "TEST",
     "emoji": "🧪",
     "wash_focus": "Water",
-    "main_categories": ["Health & Wellbeing", "Infrastructure & Technology", "Data, Knowledge & Collaboration"],
+    "main_categories": [
+      "Health & Wellbeing",
+      "Infrastructure & Technology",
+      "Data, Knowledge & Collaboration"
+    ],
     "primary_category": "Health & Wellbeing",
     "purpose": "Introduce water quality, contamination pathways, and safe water treatment.",
     "key_learning": "Safe water must be protected at every step from source to mouth. Testing makes invisible risk visible. An improved source is not the same as safe, reliable water.",
@@ -48,7 +59,10 @@
     "reading_tie": "",
     "image": "photos/image2.jpg",
     "token_image": "",
-    "route_position": { "x": 267, "y": 160 }
+    "route_position": {
+      "x": 267,
+      "y": 160
+    }
   },
   {
     "id": 3,
@@ -57,7 +71,12 @@
     "icon_label": "TRUCK",
     "emoji": "🚛",
     "wash_focus": "Sanitation",
-    "main_categories": ["Infrastructure & Technology", "Governance, Finance & Institutions", "Health & Wellbeing", "Climate, Environment & Ecosystems"],
+    "main_categories": [
+      "Infrastructure & Technology",
+      "Governance, Finance & Institutions",
+      "Health & Wellbeing",
+      "Climate, Environment & Ecosystems"
+    ],
     "primary_category": "Infrastructure & Technology",
     "purpose": "Show sanitation as a full chain — from household to treatment, reuse, and disposal.",
     "key_learning": "Sanitation is a full chain. It can break at containment, emptying, transport, treatment, reuse, regulation, or financing — and each failure has consequences for human and environmental health.",
@@ -74,7 +93,10 @@
     "reading_tie": "",
     "image": "photos/image3.jpeg",
     "token_image": "",
-    "route_position": { "x": 433, "y": 160 }
+    "route_position": {
+      "x": 433,
+      "y": 160
+    }
   },
   {
     "id": 4,
@@ -83,7 +105,11 @@
     "icon_label": "COIN",
     "emoji": "⭐",
     "wash_focus": "Cross-cutting",
-    "main_categories": ["Culture, History & Place", "Livelihoods & Economy", "Governance, Finance & Institutions"],
+    "main_categories": [
+      "Culture, History & Place",
+      "Livelihoods & Economy",
+      "Governance, Finance & Institutions"
+    ],
     "primary_category": "Culture, History & Place",
     "purpose": "Situate WASH within Ghana's history, political identity, and everyday economy.",
     "key_learning": "Technical systems are not separate from history or power. Infrastructure is shaped by colonial legacy, national identity, markets, and politics — not only engineering.",
@@ -99,7 +125,10 @@
     "reading_tie": "",
     "image": "photos/image4.JPG",
     "token_image": "",
-    "route_position": { "x": 600, "y": 160 }
+    "route_position": {
+      "x": 600,
+      "y": 160
+    }
   },
   {
     "id": 5,
@@ -108,7 +137,12 @@
     "icon_label": "CROSS",
     "emoji": "🏥",
     "wash_focus": "Water; Hygiene; Cross-cutting",
-    "main_categories": ["Health & Wellbeing", "Infrastructure & Technology", "Governance, Finance & Institutions", "Gender, Equity & Safety"],
+    "main_categories": [
+      "Health & Wellbeing",
+      "Infrastructure & Technology",
+      "Governance, Finance & Institutions",
+      "Gender, Equity & Safety"
+    ],
     "primary_category": "Health & Wellbeing",
     "purpose": "Connect WASH to health geography, disease pathways, and the systemic conditions needed for health access.",
     "key_learning": "Water insecurity affects health through contamination, shortage, and stress — and health access itself depends on transport, staffing, electricity, and roads, not just water quality.",
@@ -125,7 +159,10 @@
     "reading_tie": "",
     "image": "photos/image5.jpeg",
     "token_image": "",
-    "route_position": { "x": 700, "y": 310 }
+    "route_position": {
+      "x": 700,
+      "y": 310
+    }
   },
   {
     "id": 6,
@@ -134,7 +171,11 @@
     "icon_label": "STONE",
     "emoji": "🪨",
     "wash_focus": "Water",
-    "main_categories": ["Culture, History & Place", "Governance, Finance & Institutions", "Climate, Environment & Ecosystems"],
+    "main_categories": [
+      "Culture, History & Place",
+      "Governance, Finance & Institutions",
+      "Climate, Environment & Ecosystems"
+    ],
     "primary_category": "Culture, History & Place",
     "purpose": "Show that water is also sacred, identity-forming, and governed through traditional authority.",
     "key_learning": "Water is shaped by social, political, and ecological processes. A WASH project here would need to start with relationships, authority, and community meaning — not technical specifications.",
@@ -150,7 +191,10 @@
     "reading_tie": "",
     "image": "photos/image6.jpeg",
     "token_image": "",
-    "route_position": { "x": 533, "y": 310 }
+    "route_position": {
+      "x": 533,
+      "y": 310
+    }
   },
   {
     "id": 7,
@@ -159,7 +203,12 @@
     "icon_label": "TOILET",
     "emoji": "🚽",
     "wash_focus": "Sanitation",
-    "main_categories": ["Infrastructure & Technology", "Governance, Finance & Institutions", "Livelihoods & Economy", "Gender, Equity & Safety"],
+    "main_categories": [
+      "Infrastructure & Technology",
+      "Governance, Finance & Institutions",
+      "Livelihoods & Economy",
+      "Gender, Equity & Safety"
+    ],
     "primary_category": "Infrastructure & Technology",
     "purpose": "Connect sanitation design with local enterprise, dignity, and user acceptance.",
     "key_learning": "Appropriate technology must be maintainable, affordable, and accepted by the people who use it. Safety is part of sanitation access — not a separate issue.",
@@ -175,7 +224,10 @@
     "reading_tie": "",
     "image": "photos/image7.jpg",
     "token_image": "",
-    "route_position": { "x": 367, "y": 310 }
+    "route_position": {
+      "x": 367,
+      "y": 310
+    }
   },
   {
     "id": 8,
@@ -184,7 +236,11 @@
     "icon_label": "DATA",
     "emoji": "📊",
     "wash_focus": "Water; Cross-cutting",
-    "main_categories": ["Data, Knowledge & Collaboration", "Governance, Finance & Institutions", "Infrastructure & Technology"],
+    "main_categories": [
+      "Data, Knowledge & Collaboration",
+      "Governance, Finance & Institutions",
+      "Infrastructure & Technology"
+    ],
     "primary_category": "Data, Knowledge & Collaboration",
     "purpose": "Show the role of data, finance, monitoring, and accountability in WASH reliability.",
     "key_learning": "Water systems can fail not because technology is absent, but because data, money, staffing, and accountability are weak. Better decisions depend on evidence, accountability, and collaboration.",
@@ -199,7 +255,10 @@
     "reading_tie": "",
     "image": "photos/image8.jpeg",
     "token_image": "",
-    "route_position": { "x": 200, "y": 310 }
+    "route_position": {
+      "x": 200,
+      "y": 310
+    }
   },
   {
     "id": 9,
@@ -208,7 +267,12 @@
     "icon_label": "VALVE",
     "emoji": "🔧",
     "wash_focus": "Water",
-    "main_categories": ["Infrastructure & Technology", "Health & Wellbeing", "Governance, Finance & Institutions", "Data, Knowledge & Collaboration"],
+    "main_categories": [
+      "Infrastructure & Technology",
+      "Health & Wellbeing",
+      "Governance, Finance & Institutions",
+      "Data, Knowledge & Collaboration"
+    ],
     "primary_category": "Infrastructure & Technology",
     "purpose": "Demonstrate centralized water treatment and show how training, power, and monitoring affect system reliability.",
     "key_learning": "Safe drinking water at scale requires treatment steps, trained operators, monitoring, and reliable distribution. A treatment plant is only as good as the power, skills, and institutions around it.",
@@ -226,7 +290,10 @@
     "image": "photos/image9.PNG",
     "secondary_image": "photos/weija.jpeg",
     "token_image": "",
-    "route_position": { "x": 100, "y": 460 }
+    "route_position": {
+      "x": 100,
+      "y": 460
+    }
   },
   {
     "id": 10,
@@ -235,7 +302,12 @@
     "icon_label": "SOAP",
     "emoji": "🧼",
     "wash_focus": "Hygiene; Sanitation; Water",
-    "main_categories": ["Health & Wellbeing", "Data, Knowledge & Collaboration", "Culture, History & Place", "Infrastructure & Technology"],
+    "main_categories": [
+      "Health & Wellbeing",
+      "Data, Knowledge & Collaboration",
+      "Culture, History & Place",
+      "Infrastructure & Technology"
+    ],
     "primary_category": "Health & Wellbeing",
     "purpose": "Connect WASH to hygiene promotion, public health education, and community-level practice.",
     "key_learning": "Behaviour change is part of the WASH system. Infrastructure matters, but education helps people use, protect, and trust it.",
@@ -251,7 +323,13 @@
     "reading_tie": "",
     "image": "photos/image10.jpg",
     "token_image": "",
-    "route_position": { "x": 267, "y": 460 }
+    "route_position": {
+      "x": 267,
+      "y": 460
+    },
+    "peer_spotlight_name": "Humna",
+    "peer_spotlight_context": "Humna's favourite visit was the community visit with the Accra School of Hygiene at Hamstead Academy. For her, the hygiene and sanitation club showed how powerful youth education can be in WASH.",
+    "peer_spotlight_quote": "\"We were able to see the School of Hygiene's work at Hamstead Academy and meet the children in the hygiene and sanitation club. Seeing how much they knew about WASH was really heartwarming. It showed me that education is such a powerful tool and can make a huge impact. When someone asked why sanitation and hygiene are important, one little girl stepped forward and confidently answered that it was to protect us from disease. That moment showed that the students really understood why it mattered.\""
   },
   {
     "id": 11,
@@ -260,7 +338,11 @@
     "icon_label": "SHELL",
     "emoji": "🐚",
     "wash_focus": "Cross-cutting",
-    "main_categories": ["Culture, History & Place", "Governance, Finance & Institutions", "Gender, Equity & Safety"],
+    "main_categories": [
+      "Culture, History & Place",
+      "Governance, Finance & Institutions",
+      "Gender, Equity & Safety"
+    ],
     "primary_category": "Culture, History & Place",
     "purpose": "Reflect on colonialism, inequality, and how history shapes present-day systems.",
     "key_learning": "Present-day WASH inequities are built on historical foundations. Ignoring this history limits what we can understand about the present.",
@@ -276,7 +358,10 @@
     "reading_tie": "",
     "image": "photos/image11.jpg",
     "token_image": "",
-    "route_position": { "x": 433, "y": 460 }
+    "route_position": {
+      "x": 433,
+      "y": 460
+    }
   },
   {
     "id": 12,
@@ -285,7 +370,12 @@
     "icon_label": "FISH",
     "emoji": "🐟",
     "wash_focus": "Water; Sanitation; Hygiene",
-    "main_categories": ["Gender, Equity & Safety", "Health & Wellbeing", "Livelihoods & Economy", "Culture, History & Place"],
+    "main_categories": [
+      "Gender, Equity & Safety",
+      "Health & Wellbeing",
+      "Livelihoods & Economy",
+      "Culture, History & Place"
+    ],
     "primary_category": "Gender, Equity & Safety",
     "purpose": "Connect WASH to gendered labour, food safety, dignity, and the economic pressures that shape safer practices.",
     "key_learning": "Safer WASH practices have to protect health without punishing the women whose livelihoods already operate under pressure. Skills training, savings systems, and market incentives matter.",
@@ -302,7 +392,10 @@
     "reading_tie": "",
     "image": "photos/image12.jpg",
     "token_image": "",
-    "route_position": { "x": 600, "y": 460 }
+    "route_position": {
+      "x": 600,
+      "y": 460
+    }
   },
   {
     "id": 13,
@@ -311,7 +404,12 @@
     "icon_label": "TREE",
     "emoji": "🎍",
     "wash_focus": "Water; Cross-cutting",
-    "main_categories": ["Culture, History & Place", "Climate, Environment & Ecosystems", "Governance, Finance & Institutions", "Data, Knowledge & Collaboration"],
+    "main_categories": [
+      "Culture, History & Place",
+      "Climate, Environment & Ecosystems",
+      "Governance, Finance & Institutions",
+      "Data, Knowledge & Collaboration"
+    ],
     "primary_category": "Data, Knowledge & Collaboration",
     "purpose": "Show how community knowledge, spiritual authority, and local governance protect ecosystems across generations.",
     "key_learning": "Sacred groves are governed through taboos, rituals, and traditional authority. Spirituality can be a form of environmental protection. Local knowledge systems should be included in conservation and WASH work.",
@@ -326,7 +424,10 @@
     "reading_tie": "",
     "image": "photos/image13.JPG",
     "token_image": "",
-    "route_position": { "x": 700, "y": 610 }
+    "route_position": {
+      "x": 700,
+      "y": 610
+    }
   },
   {
     "id": 14,
@@ -335,7 +436,12 @@
     "icon_label": "CANOPY",
     "emoji": "🌿",
     "wash_focus": "Water; Cross-cutting",
-    "main_categories": ["Climate, Environment & Ecosystems", "Culture, History & Place", "Livelihoods & Economy", "Health & Wellbeing"],
+    "main_categories": [
+      "Climate, Environment & Ecosystems",
+      "Culture, History & Place",
+      "Livelihoods & Economy",
+      "Health & Wellbeing"
+    ],
     "primary_category": "Climate, Environment & Ecosystems",
     "purpose": "Connect forests, biodiversity, water, climate protection, and livelihoods.",
     "key_learning": "Human health, ecosystems, land use, water, and livelihoods are interconnected. Climate-resilient WASH has to include land use, biodiversity, and environmental protection.",
@@ -350,7 +456,10 @@
     "reading_tie": "",
     "image": "photos/image14.jpeg",
     "token_image": "",
-    "route_position": { "x": 533, "y": 610 }
+    "route_position": {
+      "x": 533,
+      "y": 610
+    }
   },
   {
     "id": 15,
@@ -359,7 +468,12 @@
     "icon_label": "CAMERA",
     "emoji": "📷",
     "wash_focus": "Cross-cutting",
-    "main_categories": ["Data, Knowledge & Collaboration", "Governance, Finance & Institutions", "Climate, Environment & Ecosystems", "Health & Wellbeing"],
+    "main_categories": [
+      "Data, Knowledge & Collaboration",
+      "Governance, Finance & Institutions",
+      "Climate, Environment & Ecosystems",
+      "Health & Wellbeing"
+    ],
     "primary_category": "Data, Knowledge & Collaboration",
     "purpose": "Show how method shapes what knowledge becomes visible, and connect climate resilience to WASH planning.",
     "key_learning": "Climate change can damage WASH through flooding, drought, and storms. Photo-elicitation shows that lived experience can reveal WASH inequities that surveys miss — including gendered access.",
@@ -375,7 +489,10 @@
     "reading_tie": "",
     "image": "photos/image15.jpg",
     "token_image": "",
-    "route_position": { "x": 367, "y": 610 }
+    "route_position": {
+      "x": 367,
+      "y": 610
+    }
   },
   {
     "id": 16,
@@ -384,7 +501,12 @@
     "icon_label": "COCOA",
     "emoji": "🍫",
     "wash_focus": "Water; Cross-cutting",
-    "main_categories": ["Livelihoods & Economy", "Climate, Environment & Ecosystems", "Culture, History & Place", "Governance, Finance & Institutions"],
+    "main_categories": [
+      "Livelihoods & Economy",
+      "Climate, Environment & Ecosystems",
+      "Culture, History & Place",
+      "Governance, Finance & Institutions"
+    ],
     "primary_category": "Livelihoods & Economy",
     "purpose": "Connect water, agriculture, climate, governance, and livelihoods through Ghana's cocoa history.",
     "key_learning": "Water security cannot be separated from food, income, climate, and land. A cocoa farm depends on rainfall, soil, roads, markets, labour, and policy decisions — all at once.",
@@ -403,6 +525,9 @@
     "reading_tie": "",
     "image": "photos/image16.jpg",
     "token_image": "",
-    "route_position": { "x": 200, "y": 610 }
+    "route_position": {
+      "x": 200,
+      "y": 610
+    }
   }
 ]

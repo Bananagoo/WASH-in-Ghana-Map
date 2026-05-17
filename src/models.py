@@ -32,6 +32,9 @@ class Stop:
     what_happened: str = ""
     systems_insight: str = ""
     references: List[str] = field(default_factory=list)
+    peer_spotlight_name: str = ""
+    peer_spotlight_context: str = ""
+    peer_spotlight_quote: str = ""
 
 
 @dataclass

@@ -8,6 +8,7 @@ from src.path_mask import PathMask
 from src.player_controller import PlayerController
 from src.icon_renderer import draw_icon, get_icon_type
 from src.animation import PulseEffect
+from src.assets import token_badge
 from src import journal_panel
 from src import config as C
 from src.constants import SCREEN_TITLE, SCREEN_STOP, SCREEN_JOURNAL, SCREEN_MAP, SCREEN_WASH_MAP
@@ -66,6 +67,13 @@ class RouteScreen(BaseScreen):
             first = stops[0]
             self._controller.place_at(float(first.route_position.x),
                                       float(first.route_position.y) + 30.0)
+
+        # ── Token badge cache for sign posts ──────────────────────────────
+        if not hasattr(self, "_stop_badges"):
+            self._stop_badges = {
+                s.token: token_badge(s.token, size=36)
+                for s in stops if s.token
+            }
 
         # ── Pulse animation (current stop marker) ──────────────────────────
         if not hasattr(self, "_pulse"):
@@ -258,10 +266,11 @@ class RouteScreen(BaseScreen):
                 pygame.draw.circle(surface, C.GOLD_LIGHT, (sx, sy), pulse_r, 3)
                 pygame.draw.circle(surface, C.GOLD, (sx, sy), pulse_r + 3, 1)
 
-            # ── Wooden sign icon above marker ─────────────────────────────
-            icon_y    = sy - _MR - 26
+            # ── Wooden sign post with token badge ─────────────────────────
+            icon_y = sy - _MR - 26
+            badge  = self._stop_badges.get(stop.token)
             icon_type = get_icon_type(stop.id, getattr(stop, "icon_type", ""))
-            draw_icon(surface, sx, icon_y, icon_type, size=30, dimmed=locked)
+            draw_icon(surface, sx, icon_y, icon_type, size=36, dimmed=locked, badge=badge)
 
             # ── Hover ring ────────────────────────────────────────────────
             if hovered and not locked:
