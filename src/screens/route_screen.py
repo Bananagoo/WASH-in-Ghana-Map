@@ -329,7 +329,7 @@ class RouteScreen(BaseScreen):
         dim.set_alpha(200)
         surface.blit(dim, (0, 0))
 
-        pw, ph = 520, 320
+        pw, ph = 620, 330
         px = w // 2 - pw // 2
         py = h // 2 - ph // 2
         draw_panel(surface, pygame.Rect(px, py, pw, ph),
@@ -341,27 +341,54 @@ class RouteScreen(BaseScreen):
         ty += title_s.get_height() + 6
         pygame.draw.line(surface, _INFO_BDR,
                          (px + C.PAD_LG, ty), (px + pw - C.PAD_LG, ty), 1)
-        ty += 10
+        ty += 12
 
-        lines = [
-            "Mapping WASH: A Systems Journey Through Ghana",
-            "Navigate the field route and click on stop markers to",
-            "explore WASH (Water, Sanitation & Hygiene) sites.",
-            "",
-            "Controls:",
-            "  WASD / Arrow keys  —  move character",
-            "  Click stop marker  —  open field note",
-            "  J  —  open field journal",
-            "  M  —  mute / unmute music",
-            "  F11  —  toggle fullscreen",
-            "",
-            "Click anywhere or press any key to close.",
+        content_x = px + C.PAD_LG
+        content_w = pw - C.PAD_LG * 2
+
+        title_line = self._font_sm.render(
+            "Mapping WASH: A Systems Journey Through Ghana", True, C.OFF_WHITE)
+        surface.blit(title_line, (content_x, ty))
+        ty += title_line.get_height() + 8
+
+        ty = draw_wrapped_text(
+            surface,
+            "Navigate the field route and click stop markers to explore WASH "
+            "(Water, Sanitation & Hygiene) sites.",
+            self._font_xs,
+            C.OFF_WHITE,
+            content_x,
+            ty,
+            content_w,
+            line_spacing=4,
+        )
+        ty += 16
+
+        controls_s = self._font_sm.render("Controls", True, C.GOLD_LIGHT)
+        surface.blit(controls_s, (content_x, ty))
+        ty += controls_s.get_height() + 8
+
+        controls = [
+            ("WASD / Arrow keys", "Move character"),
+            ("Click stop marker", "Open field note"),
+            ("J", "Open field journal"),
+            ("M", "Mute / unmute music"),
+            ("F11", "Toggle fullscreen"),
         ]
-        for line in lines:
-            col = C.GOLD_LIGHT if line.startswith("Controls") else C.OFF_WHITE
-            s = self._font_xs.render(line, True, col)
-            surface.blit(s, (px + C.PAD_LG, ty))
-            ty += self._font_xs.get_height() + 3
+        key_x = content_x + 12
+        action_x = content_x + 245
+        row_h = self._font_xs.get_height() + 6
+        for key, action in controls:
+            key_s = self._font_xs.render(key, True, C.GOLD_LIGHT)
+            action_s = self._font_xs.render(action, True, C.OFF_WHITE)
+            surface.blit(key_s, (key_x, ty))
+            surface.blit(action_s, (action_x, ty))
+            ty += row_h
+
+        close_s = self._font_xs.render(
+            "Click anywhere or press any key to close.", True, C.TEAL_LIGHT)
+        surface.blit(close_s, close_s.get_rect(
+            midbottom=(w // 2, py + ph - C.PAD_LG)))
 
     # ── Tooltip ───────────────────────────────────────────────────────────────
 
