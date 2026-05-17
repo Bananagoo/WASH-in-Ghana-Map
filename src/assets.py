@@ -70,6 +70,29 @@ def load_image_fit(path: str, max_w: int, max_h: int) -> Optional[pygame.Surface
         return None
 
 
+def load_image_cover(path: str, width: int, height: int) -> Optional[pygame.Surface]:
+    """Load image preserving aspect ratio, cropping to fill width × height."""
+    key = ("cover", path, width, height)
+    if key in _cache:
+        return _cache[key]
+    if not path or not os.path.exists(path):
+        _cache[key] = None
+        return None
+    try:
+        img = pygame.image.load(path).convert_alpha()
+        iw, ih = img.get_size()
+        scale = max(width / iw, height / ih)
+        nw, nh = max(1, int(iw * scale)), max(1, int(ih * scale))
+        img = pygame.transform.smoothscale(img, (nw, nh))
+        crop = pygame.Rect((nw - width) // 2, (nh - height) // 2, width, height)
+        img = img.subsurface(crop).copy()
+        _cache[key] = img
+        return img
+    except Exception:
+        _cache[key] = None
+        return None
+
+
 def clear_cache():
     _cache.clear()
 
