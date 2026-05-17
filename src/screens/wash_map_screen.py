@@ -10,8 +10,8 @@ from src.constants import SCREEN_ROUTE, SCREEN_WASH_RESULT
 _HUB_CX   = 594   # centre x of diagram area
 _HUB_CY   = 356   # centre y
 _HUB_R    = 50    # hub circle radius
-_NODE_R   = 195   # distance from hub centre to each dimension node
-_CARD_W   = 130   # dimension card width
+_NODE_R   = 205   # distance from hub centre to each dimension node
+_CARD_W   = 140   # dimension card width
 _CARD_H   = 104   # dimension card height
 
 HEADER_H  = 65
@@ -20,7 +20,7 @@ TRAY_W    = 165
 PAD       = 10
 BADGE_SZ  = 30
 ITEM_H    = 44
-SLOT_W    = 57    # each of the two slots per card
+SLOT_W    = 62    # each of the two slots per card
 SLOT_H    = 36
 
 # angle (deg, clockwise from top) → category
@@ -176,7 +176,7 @@ class WashMapScreen(BaseScreen):
         n       = len(self._unplaced_tokens())
         total_h = n * (ITEM_H + 4)
         visible = C.SCREEN_HEIGHT - HEADER_H - BOTTOM_H - 22
-        return max(0, total_h - visible)
+        return max(0, total_h - visible + PAD)
 
     def _tokens_in_cat(self, cat_id):
         p = self.game.state.wash_map_placements
