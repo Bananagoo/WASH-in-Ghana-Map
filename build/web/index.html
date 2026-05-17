@@ -464,6 +464,23 @@ frameborder="1"
         });
         observer.observe(document.body, { attributes: true, subtree: true, attributeFilter: ['style'] });
     })();
+
+    // When pygame signals ready-for-click, hide the fake progress bar and update text
+    (function() {
+        const infobox = document.getElementById('infobox');
+        if (!infobox) return;
+        const check = function() {
+            const txt = infobox.innerText || '';
+            if (txt.toLowerCase().includes('ready') || txt.toLowerCase().includes('click')) {
+                const bar = document.querySelector('#loading-screen .bar-wrap');
+                const lbl = document.querySelector('#loading-screen .loading-text');
+                if (bar) bar.style.display = 'none';
+                if (lbl) lbl.textContent = 'Click anywhere to start';
+            }
+        };
+        const obs = new MutationObserver(check);
+        obs.observe(infobox, { childList: true, subtree: true, characterData: true });
+    })();
     </script>
 
     <div id="dlg" hidden>
