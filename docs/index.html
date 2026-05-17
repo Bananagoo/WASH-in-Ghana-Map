@@ -183,7 +183,7 @@ function show_infobox() {
 
 </script>
 
-    <title>WASH in Ghana — Field Survey Game</title>
+    <title>WASH in Ghana — Knowledge Mobilization</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -338,6 +338,10 @@ function show_infobox() {
             text-transform: uppercase;
         }
 
+        #loading-screen.ready .bar-wrap {
+            display: none;
+        }
+
         #loading-screen.ready .loading-text {
             color: #D2A532;
             font-size: 15px;
@@ -395,7 +399,7 @@ function show_infobox() {
     <!-- Custom loading screen -->
     <div id="loading-screen">
         <h1>WASH in Ghana</h1>
-        <p class="subtitle">SYDE 599 &nbsp;&middot;&nbsp; Knowledge Mobilization Field Survey</p>
+        <p class="subtitle">SYDE 599 &nbsp;&middot;&nbsp; Knowledge Mobilization</p>
         <div class="img-wrap">
             <img src="loading.jpg" alt="Construction sign at Ashesi University">
             <p class="img-caption">Construction sign at Ashesi University</p>
@@ -502,15 +506,31 @@ frameborder="1"
     }
 
     // Keep canvas aspect stable if pygbag adjusts inline styles.
+    // Hide loading screen and stabilize canvas when pygame canvas becomes visible
     (function() {
         const observer = new MutationObserver(function() {
             const canvas = document.getElementById('canvas');
             if (canvas && canvas.style.visibility === 'visible') {
+                hide_loading_screen();
                 stabilizeCanvas();
+                observer.disconnect();
             }
         });
         observer.observe(document.body, { attributes: true, subtree: true, attributeFilter: ['style'] });
         window.addEventListener('resize', stabilizeCanvas);
+    })();
+
+    // Switch loading screen to ready state when pygbag signals click-to-start
+    (function() {
+        const infobox = document.getElementById('infobox');
+        if (!infobox) return;
+        const obs = new MutationObserver(function() {
+            const txt = infobox.innerText || '';
+            if (txt.toLowerCase().includes('ready') || txt.toLowerCase().includes('click')) {
+                set_loading_ready();
+            }
+        });
+        obs.observe(infobox, { childList: true, subtree: true, characterData: true });
     })();
     </script>
 
