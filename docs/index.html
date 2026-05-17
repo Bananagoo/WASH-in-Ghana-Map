@@ -229,8 +229,10 @@ function show_infobox() {
         canvas.emscripten {
             border: 0px none;
             background-color: transparent;
-            width: min(100vw, 1024px, calc(100vh * 1.4222222222));
-            height: min(100vh, 720px, calc(100vw * 0.703125));
+            aspect-ratio: 1024 / 720;
+            width: min(100vw, 1024px, calc(100vh * 1.4222222222)) !important;
+            height: min(100vh, 720px, calc(100vw * 0.703125)) !important;
+            max-height: min(100vh, 720px);
             z-index: 5;
             padding: 0;
             margin: auto;
@@ -257,8 +259,10 @@ function show_infobox() {
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 14px;
+            gap: 9px;
             z-index: 10;
+            box-sizing: border-box;
+            padding: 18px;
         }
 
         #loading-screen h1 {
@@ -281,11 +285,13 @@ function show_infobox() {
             flex-direction: column;
             align-items: center;
             gap: 6px;
+            flex: 0 1 auto;
         }
 
         #loading-screen img {
-            width: 300px;
-            height: 210px;
+            width: min(300px, 78vw);
+            height: auto;
+            max-height: min(210px, 38vh);
             object-fit: cover;
             border: 2px solid #D2A532;
             border-radius: 6px;
@@ -298,7 +304,7 @@ function show_infobox() {
         }
 
         #loading-screen .bar-wrap {
-            width: 300px;
+            width: min(300px, 78vw);
             height: 6px;
             background: #1C3560;
             border-radius: 3px;
@@ -454,15 +460,29 @@ frameborder="1"
     <script>
     // Hide loading screen once the game canvas becomes visible
     (function() {
+        function stabilizeCanvas() {
+            const canvas = document.getElementById('canvas');
+            if (!canvas) return;
+            canvas.style.width = 'min(100vw, 1024px, calc(100vh * 1.4222222222))';
+            canvas.style.height = 'min(100vh, 720px, calc(100vw * 0.703125))';
+            canvas.style.maxHeight = 'min(100vh, 720px)';
+            canvas.style.aspectRatio = '1024 / 720';
+            if (typeof window_resize === 'function') window_resize();
+        }
+
         const observer = new MutationObserver(function() {
             const canvas = document.getElementById('canvas');
             if (canvas && canvas.style.visibility === 'visible') {
+                stabilizeCanvas();
                 const ls = document.getElementById('loading-screen');
                 if (ls) ls.style.display = 'none';
+                requestAnimationFrame(stabilizeCanvas);
+                setTimeout(stabilizeCanvas, 250);
                 observer.disconnect();
             }
         });
         observer.observe(document.body, { attributes: true, subtree: true, attributeFilter: ['style'] });
+        window.addEventListener('resize', stabilizeCanvas);
     })();
     </script>
 
