@@ -7,8 +7,7 @@ from src.sprite import PlayerSprite
 from src.path_mask import PathMask
 from src.player_controller import PlayerController
 from src.icon_renderer import draw_icon, get_icon_type
-from src.animation import FloatUpEffect, PulseEffect
-from src.assets import token_badge
+from src.animation import PulseEffect
 from src import journal_panel
 from src import config as C
 from src.constants import SCREEN_TITLE, SCREEN_STOP, SCREEN_JOURNAL, SCREEN_MAP, SCREEN_WASH_MAP
@@ -67,36 +66,6 @@ class RouteScreen(BaseScreen):
             first = stops[0]
             self._controller.place_at(float(first.route_position.x),
                                       float(first.route_position.y) + 30.0)
-
-        # ── Token badge cache (small badges for map markers) ──────────────
-        if not hasattr(self, "_stop_badges"):
-            self._stop_badges = {
-                s.token: token_badge(s.token, size=24)
-                for s in stops if s.token
-            }
-            self._stop_badges_dim = {
-                tok: _dim_surface(badge)
-                for tok, badge in self._stop_badges.items()
-            }
-
-        # ── Float-up token effects ─────────────────────────────────────────
-        if not hasattr(self, "_floats"):
-            self._floats: list      = []
-            self._prev_token_count  = 0
-
-        new_count = len(state.collected_tokens)
-        if new_count > self._prev_token_count:
-            new_token = state.collected_tokens[-1]
-            done_id   = state.current_unlocked_id() - 1
-            done_stop = next((s for s in stops if s.id == done_id), None)
-            if done_stop:
-                sx, sy = self._stop_screen_pos(done_stop)
-                self._floats.append(FloatUpEffect(
-                    f"+ {new_token}", (sx, sy - 10),
-                    C.GOLD, self._font_sm, duration=1.6,
-                ))
-                self.game.audio.play("collect")
-        self._prev_token_count = new_count
 
         # ── Pulse animation (current stop marker) ──────────────────────────
         if not hasattr(self, "_pulse"):
@@ -164,8 +133,7 @@ class RouteScreen(BaseScreen):
         self._map_btn.visible = state.all_stops_complete()
 
     def on_exit(self):
-        if hasattr(self, "_floats"):
-            self._floats = [f for f in self._floats if not f.done]
+        pass
 
     # ── Events ────────────────────────────────────────────────────────────────
 
@@ -243,11 +211,6 @@ class RouteScreen(BaseScreen):
         self._controller.update(dt, keys, self._path_mask,
                                 state.current_unlocked_id())
 
-        if hasattr(self, "_floats"):
-            for f in self._floats:
-                f.update(dt)
-            self._floats = [f for f in self._floats if not f.done]
-
     # ── Draw ──────────────────────────────────────────────────────────────────
 
     def _stop_screen_pos(self, stop):
@@ -295,15 +258,10 @@ class RouteScreen(BaseScreen):
                 pygame.draw.circle(surface, C.GOLD_LIGHT, (sx, sy), pulse_r, 3)
                 pygame.draw.circle(surface, C.GOLD, (sx, sy), pulse_r + 3, 1)
 
-            # ── Token badge above marker ──────────────────────────────────
-            badge_sz = 24
-            icon_y   = sy - _MR - badge_sz - 4
-            if stop.token:
-                badge = (self._stop_badges_dim.get(stop.token)
-                         if locked else
-                         self._stop_badges.get(stop.token))
-                if badge:
-                    surface.blit(badge, (sx - badge_sz // 2, icon_y))
+            # ── Wooden sign icon above marker ─────────────────────────────
+            icon_y    = sy - _MR - 26
+            icon_type = get_icon_type(stop.id, getattr(stop, "icon_type", ""))
+            draw_icon(surface, sx, icon_y, icon_type, size=30, dimmed=locked)
 
             # ── Hover ring ────────────────────────────────────────────────
             if hovered and not locked:
@@ -336,11 +294,6 @@ class RouteScreen(BaseScreen):
             walk_frame = self._controller.walk_frame,
             bob_offset = self._controller.bob_offset,
         )
-
-        # ── Float-up effects ──────────────────────────────────────────────
-        if hasattr(self, "_floats"):
-            for f in self._floats:
-                f.draw(surface)
 
         # ── Journal panel ─────────────────────────────────────────────────
         panel_rect = pygame.Rect(route_w, HEADER_H,
@@ -444,9 +397,3 @@ class RouteScreen(BaseScreen):
             s = font.render(line, True, C.WHITE)
             surface.blit(s, (tx + pad, iy))
             iy += font.get_height() + 2
-
-
-def _dim_surface(surf: pygame.Surface, alpha: int = 90) -> pygame.Surface:
-    dim = surf.copy()
-    dim.set_alpha(alpha)
-    return dim
