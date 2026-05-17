@@ -234,7 +234,7 @@ class WashResultScreen(BaseScreen):
 
         # Scroll indicator for left panel
         if self._max_scroll > 0:
-            sc_s = self._font_xs.render("↑↓ scroll", True, C.MID_GREY)
+            sc_s = self._font_xs.render("scroll to see more", True, C.MID_GREY)
             surface.blit(sc_s, (C.PAD, h - _BOTTOM_H - sc_s.get_height() - 4))
 
         # Divider between panels

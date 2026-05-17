@@ -35,6 +35,8 @@ class Stop:
     peer_spotlight_name: str = ""
     peer_spotlight_context: str = ""
     peer_spotlight_quote: str = ""
+    image_caption: str = ""
+    secondary_image_caption: str = ""
 
 
 @dataclass

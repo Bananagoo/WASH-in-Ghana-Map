@@ -29,7 +29,9 @@
     "route_position": {
       "x": 100,
       "y": 160
-    }
+    },
+    "image_caption": "Image of the group with the CEWEFIA team",
+    "secondary_image_caption": ""
   },
   {
     "id": 2,
@@ -62,7 +64,9 @@
     "route_position": {
       "x": 267,
       "y": 160
-    }
+    },
+    "image_caption": "Image of the group in front of the Ashesi University sign on the first day",
+    "secondary_image_caption": ""
   },
   {
     "id": 3,
@@ -96,7 +100,9 @@
     "route_position": {
       "x": 433,
       "y": 160
-    }
+    },
+    "image_caption": "Image of petri dishes from the water testing activity",
+    "secondary_image_caption": ""
   },
   {
     "id": 4,
@@ -128,7 +134,9 @@
     "route_position": {
       "x": 600,
       "y": 160
-    }
+    },
+    "image_caption": "Image of the Kwame Nkrumah Memorial",
+    "secondary_image_caption": ""
   },
   {
     "id": 5,
@@ -162,7 +170,9 @@
     "route_position": {
       "x": 700,
       "y": 310
-    }
+    },
+    "image_caption": "Image of the Berekuso clinic sign",
+    "secondary_image_caption": ""
   },
   {
     "id": 6,
@@ -194,7 +204,9 @@
     "route_position": {
       "x": 533,
       "y": 310
-    }
+    },
+    "image_caption": "Image of the sacred stream in Berekuso",
+    "secondary_image_caption": ""
   },
   {
     "id": 7,
@@ -227,7 +239,9 @@
     "route_position": {
       "x": 367,
       "y": 310
-    }
+    },
+    "image_caption": "Image of the group in front of a WASHKing toilet",
+    "secondary_image_caption": ""
   },
   {
     "id": 8,
@@ -258,7 +272,9 @@
     "route_position": {
       "x": 200,
       "y": 310
-    }
+    },
+    "image_caption": "Image of a Kwame Nkrumah quote displayed inside the museum",
+    "secondary_image_caption": ""
   },
   {
     "id": 9,
@@ -293,7 +309,9 @@
     "route_position": {
       "x": 100,
       "y": 460
-    }
+    },
+    "image_caption": "Image of the desludger arm at the Weija Treatment Plant",
+    "secondary_image_caption": "Diagram showing images from the Weija Treatment Plant and the water treatment process"
   },
   {
     "id": 10,
@@ -329,7 +347,9 @@
     },
     "peer_spotlight_name": "Humna",
     "peer_spotlight_context": "Humna's favourite visit was the community visit with the Accra School of Hygiene at Hamstead Academy. For her, the hygiene and sanitation club showed how powerful youth education can be in WASH.",
-    "peer_spotlight_quote": "\"We were able to see the School of Hygiene's work at Hamstead Academy and meet the children in the hygiene and sanitation club. Seeing how much they knew about WASH was really heartwarming. It showed me that education is such a powerful tool and can make a huge impact. When someone asked why sanitation and hygiene are important, one little girl stepped forward and confidently answered that it was to protect us from disease. That moment showed that the students really understood why it mattered.\""
+    "peer_spotlight_quote": "\"We were able to see the School of Hygiene's work at Hamstead Academy and meet the children in the hygiene and sanitation club. Seeing how much they knew about WASH was really heartwarming. It showed me that education is such a powerful tool and can make a huge impact. When someone asked why sanitation and hygiene are important, one little girl stepped forward and confidently answered that it was to protect us from disease. That moment showed that the students really understood why it mattered.\"",
+    "image_caption": "Image of a quote painted on the wall of the community school",
+    "secondary_image_caption": ""
   },
   {
     "id": 11,
@@ -361,7 +381,9 @@
     "route_position": {
       "x": 433,
       "y": 460
-    }
+    },
+    "image_caption": "Image of the Door of No Return at Cape Coast Castle",
+    "secondary_image_caption": ""
   },
   {
     "id": 12,
@@ -395,7 +417,9 @@
     "route_position": {
       "x": 600,
       "y": 460
-    }
+    },
+    "image_caption": "Image of fish drying on elevated nets",
+    "secondary_image_caption": ""
   },
   {
     "id": 13,
@@ -427,7 +451,9 @@
     "route_position": {
       "x": 700,
       "y": 610
-    }
+    },
+    "image_caption": "Image of the sacred forest",
+    "secondary_image_caption": ""
   },
   {
     "id": 14,
@@ -459,7 +485,9 @@
     "route_position": {
       "x": 533,
       "y": 610
-    }
+    },
+    "image_caption": "Image of me on the canopy walkway at Kakum National Park",
+    "secondary_image_caption": ""
   },
   {
     "id": 15,
@@ -492,7 +520,9 @@
     "route_position": {
       "x": 367,
       "y": 610
-    }
+    },
+    "image_caption": "Image of Polaroids taken by the group during the trip",
+    "secondary_image_caption": ""
   },
   {
     "id": 16,
@@ -528,6 +558,8 @@
     "route_position": {
       "x": 200,
       "y": 610
-    }
+    },
+    "image_caption": "Image of me holding a cocoa pod",
+    "secondary_image_caption": ""
   }
 ]

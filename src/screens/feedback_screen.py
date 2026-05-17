@@ -179,7 +179,7 @@ class FeedbackScreen(BaseScreen):
         surface.set_clip(None)
 
         if self._scroll_max > 0:
-            hint_s = self._font_xs.render("↑↓ or scroll to see all rows", True, C.MID_GREY)
+            hint_s = self._font_xs.render("scroll to see all rows", True, C.MID_GREY)
             surface.blit(hint_s, (w // 2 - hint_s.get_width() // 2, h - 78))
 
         self._next_btn.draw(surface)

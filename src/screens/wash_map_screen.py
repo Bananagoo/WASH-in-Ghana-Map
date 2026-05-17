@@ -88,13 +88,13 @@ class WashMapScreen(BaseScreen):
 
         self._compare_btn = Button(
             pygame.Rect(w // 2 - 140, h - BOTTOM_H + 13, 280, 46),
-            "Compare My Diagram →",
+            "Compare My Diagram >",
             self._font_md,
             colour=C.GOLD, hover_colour=C.RUST, text_colour=C.DARK_GREY,
         )
         self._back_btn = Button(
             pygame.Rect(PAD, h - BOTTOM_H + 18, 110, 36),
-            "← Back",
+            "< Back",
             self._font_sm,
             colour=C.MID_GREY, hover_colour=C.DARK_GREY,
         )

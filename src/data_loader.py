@@ -42,6 +42,8 @@ def load_stops() -> List[Stop]:
             peer_spotlight_name=s.get("peer_spotlight_name", ""),
             peer_spotlight_context=s.get("peer_spotlight_context", ""),
             peer_spotlight_quote=s.get("peer_spotlight_quote", ""),
+            image_caption=s.get("image_caption", ""),
+            secondary_image_caption=s.get("secondary_image_caption", ""),
         ))
     return stops
 

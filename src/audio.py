@@ -7,11 +7,11 @@ import pygame
 
 
 SOUND_PATHS = {
-    "click":      "assets/audio/success.wav",    # 0.45s — short, snappy UI feedback
-    "collect":    "assets/audio/levelup.wav",    # 1.18s — satisfying fanfare on token collect
-    "open_stop":  "assets/audio/open_stop.wav",  # 0.65s — opening a field card
-    "transition": "assets/audio/transition.wav", # 0.40s — screen transitions
-    "levelup":    "assets/audio/collect.wav",    # 1.50s — final completion screen
+    "click":      "assets/audio/click.wav",       # 0.12s — soft tick for UI buttons
+    "open_stop":  "assets/audio/open_stop.wav",   # 0.45s — gentle discovery chime on location click
+    "collect":    "assets/audio/collect.wav",     # 1.10s — reward fanfare on token collect
+    "transition": "assets/audio/transition.wav",  # 0.35s — smooth ascending sweep
+    "levelup":    "assets/audio/levelup.wav",     # 1.33s — warm celebration on final screen
 }
 MUSIC_PATH = "assets/audio/music_village.ogg"
 

@@ -88,10 +88,10 @@ class RouteScreen(BaseScreen):
         # ── Buttons ────────────────────────────────────────────────────────
         btn_size = 30
 
-        # "← Home" — top left of header
+        # "< Home" — top left of header
         self._home_btn = Button(
             pygame.Rect(C.PAD, (HEADER_H - 24) // 2, 80, 24),
-            "← Home",
+            "< Home",
             self._font_xs,
             colour=(45, 78, 140),
             hover_colour=(65, 105, 175),
@@ -114,7 +114,7 @@ class RouteScreen(BaseScreen):
         # "Collect All" — bottom left, shortcut to unlock map
         self._autocollect_btn = Button(
             pygame.Rect(C.PAD, h - 50, 130, 28),
-            "Collect All →",
+            "Collect All >",
             self._font_xs,
             colour=(55, 75, 110),
             hover_colour=(80, 105, 150),
@@ -135,7 +135,7 @@ class RouteScreen(BaseScreen):
         self._map_btn = Button(
             pygame.Rect(w - C.JOURNAL_WIDTH + 10, btn_y - 44,
                         C.JOURNAL_WIDTH - 20, 34),
-            "Systems Map →",
+            "Systems Map >",
             self._font_sm,
         )
         self._map_btn.visible = state.all_stops_complete()
@@ -406,9 +406,9 @@ class RouteScreen(BaseScreen):
         if stop.token:
             lines.append(f"Token: {stop.token}")
         if state.is_stop_completed(stop.id):
-            lines.append("Click to re-read →")
+            lines.append("Click to re-read >")
         elif stop.id == unlocked_id:
-            lines.append("Click to open →")
+            lines.append("Click to open >")
         else:
             lines.append("Locked — visit in order")
 

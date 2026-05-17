@@ -150,6 +150,15 @@ class StopScreen(BaseScreen):
                                    stop.icon_label, stop.visual_theme, self._font_lg)
             surface.blit(ph, img_rect)
 
+        # Caption below the main image
+        cap_y = img_y + self.IMG_H + 4
+        cap_img_lines = _wrap(stop.image_caption, self._font_xs, self.IMG_W) if stop.image_caption else []
+        for cap_line in cap_img_lines:
+            cs = self._font_xs.render(cap_line, True, C.MID_GREY)
+            surface.blit(cs, cs.get_rect(centerx=img_x + self.IMG_W // 2, top=cap_y))
+            cap_y += self._font_xs.get_height() + 2
+        cap_img_h = cap_y - (img_y + self.IMG_H + 4)
+
         right_x = img_x + self.IMG_W + pad
         right_w  = w - right_x - pad
 
@@ -198,7 +207,7 @@ class StopScreen(BaseScreen):
             )
 
         # ── Divider ──────────────────────────────────────────────────────
-        section_top = max(img_y + self.IMG_H + 10, wh_y + 6)
+        section_top = max(img_y + self.IMG_H + cap_img_h + 10, wh_y + 6)
         pygame.draw.line(surface, C.LIGHT_GREY, (pad, section_top), (w - pad, section_top))
 
         # ── Scrollable content area ───────────────────────────────────────
@@ -236,9 +245,8 @@ class StopScreen(BaseScreen):
         diagram_block_h = 0
         if self._secondary_image:
             siw, sih = self._secondary_image.get_size()
-            diag_caption = ("Intake and pumping → Coagulation (alum) → Flocculation → "
-                            "Filtration → Chlorination → Quality assessment before distribution.")
-            cap_lines = _wrap(diag_caption, self._font_xs, inner_w)
+            sec_cap_text = stop.secondary_image_caption or ""
+            cap_lines = _wrap(sec_cap_text, self._font_xs, inner_w) if sec_cap_text else []
             cap_h = len(cap_lines) * (self._font_xs.get_height() + 3)
             diagram_block_h = C.PAD_SM + sih + C.PAD_SM + cap_h + C.PAD_SM
 
@@ -326,7 +334,7 @@ class StopScreen(BaseScreen):
         # Scroll indicator
         if self._content_max_scroll > 0:
             scroll_hint = self._font_xs.render(
-                "↑↓ scroll or use mouse wheel", True, C.MID_GREY)
+                "scroll to see more", True, C.MID_GREY)
             surface.blit(scroll_hint,
                          (w // 2 - scroll_hint.get_width() // 2, content_bottom - 18))
 

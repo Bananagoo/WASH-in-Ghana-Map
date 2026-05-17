@@ -37,7 +37,7 @@ class JournalScreen(BaseScreen):
         )
         self._map_btn = Button(
             pygame.Rect(w - 260 - C.PAD, h - _BOTTOM_H + 16, 260, C.BUTTON_HEIGHT),
-            "Build WASH Systems Diagram →",
+            "Build WASH Systems Diagram >",
             self._font_sm,
         )
 
@@ -167,7 +167,7 @@ class JournalScreen(BaseScreen):
         surface.set_clip(None)
 
         if self._max_scroll > 0:
-            sc_s = self._font_xs.render("↑↓ scroll", True, C.MID_GREY)
+            sc_s = self._font_xs.render("scroll to see more", True, C.MID_GREY)
             surface.blit(sc_s, sc_s.get_rect(
                 right=w - C.PAD, bottom=content_bottom - 4))
 
