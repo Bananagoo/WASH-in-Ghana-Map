@@ -40,7 +40,7 @@ class TitleScreen(BaseScreen):
         btn_w, btn_h = 280, 52
         self._start_btn = Button(
             pygame.Rect(w // 2 - btn_w // 2, h - 76, btn_w, btn_h),
-            "Begin Field Survey",
+            "Begin",
             self._font_md,
             colour=C.GOLD,
             hover_colour=C.RUST,

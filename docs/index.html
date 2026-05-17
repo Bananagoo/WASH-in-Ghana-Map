@@ -206,6 +206,7 @@ function show_infobox() {
 
         #infobox {
             position: fixed;
+            display: none !important;
             background: #16325C;
             color: #D2A532;
             font-family: Arial, sans-serif;
@@ -214,7 +215,7 @@ function show_infobox() {
             padding: 10px 22px;
             border: 1px solid #5F9BD7;
             border-radius: 6px;
-            z-index: 999999;
+            z-index: 0;
         }
         div.emscripten { text-align: center; }
         div.emscripten_border { border: 1px solid #16325C; }
@@ -512,7 +513,7 @@ frameborder="1"
         info.hidden = debug_hidden
         box.hidden =  debug_hidden
 
-        show_infobox()
+        // The custom loading screen replaces pygbag's default loading popup.
     }
 
     function custom_prerun(){
