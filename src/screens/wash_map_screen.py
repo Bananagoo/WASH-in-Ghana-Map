@@ -26,7 +26,7 @@ SLOT_H    = 38
 # angle (deg, clockwise from top) → category
 _CATEGORIES = [
     ("health",         "Health &\nWellbeing",               (200,  70,  70),   0),
-    ("infrastructure", "Infrastructure &\nTechnology",       (80,  120, 185),  45),
+    ("infrastructure", "Infrastructure &\nTechnology",       (80,  165, 225),  45),
     ("governance",     "Governance,\nFinance &\nInstitutions",(130,  80, 185), 90),
     ("culture",        "Culture, History\n& Place",          (195, 145,  50), 135),
     ("gender",         "Gender, Equity\n& Safety",           (200,  95, 155), 180),
@@ -152,6 +152,10 @@ class WashMapScreen(BaseScreen):
             else:
                 ex = card_rect.left  if nx > _HUB_CX else card_rect.right
                 ey = card_rect.bottom if ny < _HUB_CY else card_rect.top
+                # Extend under the rounded card corner so diagonal spokes
+                # visually meet the box edge instead of stopping short.
+                ex += 10 if nx > _HUB_CX else -10
+                ey += 10 if ny < _HUB_CY else -10
                 spoke_end = (ex, ey)
 
             # Two slots: start past the 5px colour strip (strip ends at left+7, add 3px gap)
