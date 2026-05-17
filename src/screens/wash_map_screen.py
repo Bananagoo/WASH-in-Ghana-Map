@@ -142,19 +142,33 @@ class WashMapScreen(BaseScreen):
         for cat_id, cat_name, colour, angle_deg in _CATEGORIES:
             nx, ny   = _node_pos(angle_deg)
             card_rect = pygame.Rect(nx - _CARD_W // 2, ny - _CARD_H // 2, _CARD_W, _CARD_H)
-            # Two slots side-by-side at bottom of card
+
+            # Spoke endpoint: corner for diagonals, edge-midpoint for axis-aligned
+            if angle_deg % 90 == 0:
+                if angle_deg == 0:    spoke_end = (card_rect.centerx, card_rect.bottom)
+                elif angle_deg == 90:  spoke_end = (card_rect.left,    card_rect.centery)
+                elif angle_deg == 180: spoke_end = (card_rect.centerx, card_rect.top)
+                else:                  spoke_end = (card_rect.right,   card_rect.centery)
+            else:
+                ex = card_rect.left  if nx > _HUB_CX else card_rect.right
+                ey = card_rect.bottom if ny < _HUB_CY else card_rect.top
+                spoke_end = (ex, ey)
+
+            # Two slots: start past the 5px colour strip (strip ends at left+7, add 3px gap)
             slot_y = card_rect.top + _CARD_H - SLOT_H - 5
+            slot_x = card_rect.left + 10
             slots = [
-                pygame.Rect(card_rect.left + 5,           slot_y, SLOT_W, SLOT_H),
-                pygame.Rect(card_rect.left + 5 + SLOT_W + 5, slot_y, SLOT_W, SLOT_H),
+                pygame.Rect(slot_x,              slot_y, SLOT_W, SLOT_H),
+                pygame.Rect(slot_x + SLOT_W + 4, slot_y, SLOT_W, SLOT_H),
             ]
             cards.append({
-                "cat_id":   cat_id,
-                "cat_name": cat_name,
-                "colour":   colour,
-                "rect":     card_rect,
-                "node":     (nx, ny),
-                "slots":    slots,
+                "cat_id":    cat_id,
+                "cat_name":  cat_name,
+                "colour":    colour,
+                "rect":      card_rect,
+                "node":      (nx, ny),
+                "spoke_end": spoke_end,
+                "slots":     slots,
             })
         return cards
 
@@ -330,8 +344,7 @@ class WashMapScreen(BaseScreen):
         # ── Hub-and-spoke diagram ──────────────────────────────────────────────
         # Connecting lines (drawn first, behind everything)
         for card in self._cards:
-            nx, ny = card["node"]
-            pygame.draw.line(surface, _LINE_COL, (_HUB_CX, _HUB_CY), (nx, ny), 2)
+            pygame.draw.line(surface, _LINE_COL, (_HUB_CX, _HUB_CY), card["spoke_end"], 2)
 
         # Dimension cards
         for card in self._cards:
