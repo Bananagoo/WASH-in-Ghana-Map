@@ -10,7 +10,7 @@ from src.icon_renderer import draw_icon, get_icon_type
 from src.animation import FloatUpEffect, PulseEffect
 from src import journal_panel
 from src import config as C
-from src.constants import SCREEN_TITLE, SCREEN_STOP, SCREEN_JOURNAL, SCREEN_MAP
+from src.constants import SCREEN_TITLE, SCREEN_STOP, SCREEN_JOURNAL, SCREEN_MAP, SCREEN_WASH_MAP
 
 HEADER_H = 54    # header bar height
 
@@ -188,7 +188,7 @@ class RouteScreen(BaseScreen):
 
         if self._map_btn.visible and self._map_btn.handle_event(event):
             self.game.audio.play("transition")
-            state.go_to(SCREEN_MAP)
+            state.go_to(SCREEN_WASH_MAP)
             return
 
         if event.type == pygame.MOUSEMOTION:

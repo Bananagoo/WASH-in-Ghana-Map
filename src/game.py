@@ -5,6 +5,7 @@ from src import config as C
 from src.constants import (
     SCREEN_TITLE, SCREEN_ROUTE, SCREEN_STOP,
     SCREEN_JOURNAL, SCREEN_MAP, SCREEN_FEEDBACK, SCREEN_FINAL,
+    SCREEN_WASH_MAP, SCREEN_WASH_RESULT,
 )
 from src.state import GameState
 from src.data_loader import load_stops, load_categories, load_game_text
@@ -16,6 +17,8 @@ from src.screens.journal_screen import JournalScreen
 from src.screens.systems_map_screen import SystemsMapScreen
 from src.screens.feedback_screen import FeedbackScreen
 from src.screens.final_screen import FinalScreen
+from src.screens.wash_map_screen import WashMapScreen
+from src.screens.wash_result_screen import WashResultScreen
 
 
 class Game:
@@ -33,8 +36,10 @@ class Game:
             SCREEN_STOP:     StopScreen(self),
             SCREEN_JOURNAL:  JournalScreen(self),
             SCREEN_MAP:      SystemsMapScreen(self),
-            SCREEN_FEEDBACK: FeedbackScreen(self),
-            SCREEN_FINAL:    FinalScreen(self),
+            SCREEN_FEEDBACK:    FeedbackScreen(self),
+            SCREEN_FINAL:       FinalScreen(self),
+            SCREEN_WASH_MAP:    WashMapScreen(self),
+            SCREEN_WASH_RESULT: WashResultScreen(self),
         }
 
         self._active_screen_id: str = ""

@@ -1,0 +1,12 @@
+{
+  "answer_key": {
+    "health":         ["First Aid Cross", "Bar of Soap"],
+    "infrastructure": ["Sludge Truck",    "Pipe Valve"],
+    "governance":     ["Black Star Coin", "Stream Stone"],
+    "culture":        ["Field Passport",  "Shell"],
+    "gender":         ["Toilet",          "Camera"],
+    "climate":        ["Bamboo",          "Canopy Leaf"],
+    "livelihoods":    ["Fish",            "Cocoa Pod"],
+    "knowledge":      ["Test Strip",      "Histogram Icon"]
+  }
+}

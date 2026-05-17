@@ -20,6 +20,10 @@ class GameState:
         self.score: Optional[int] = None
         self.score_pct: Optional[float] = None
 
+        # WASH Systems Map final activity
+        self.wash_map_placements: Dict[str, str] = {}  # token_name -> category_id
+        self.wash_similarity_score: Optional[int] = None
+
     # ------------------------------------------------------------------
     # Navigation helpers
     # ------------------------------------------------------------------

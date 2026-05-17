@@ -5,6 +5,8 @@ SCREEN_JOURNAL = "journal"
 SCREEN_MAP = "systems_map"
 SCREEN_FEEDBACK = "feedback"
 SCREEN_FINAL = "final"
+SCREEN_WASH_MAP = "wash_map"
+SCREEN_WASH_RESULT = "wash_result"
 
 ALL_SCREENS = [
     SCREEN_TITLE,
@@ -14,4 +16,6 @@ ALL_SCREENS = [
     SCREEN_MAP,
     SCREEN_FEEDBACK,
     SCREEN_FINAL,
+    SCREEN_WASH_MAP,
+    SCREEN_WASH_RESULT,
 ]

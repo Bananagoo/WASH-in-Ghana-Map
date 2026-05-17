@@ -2,7 +2,7 @@ import pygame
 from src.screens.base_screen import BaseScreen
 from src.ui import Button, FontCache, draw_wrapped_text
 from src import config as C
-from src.constants import SCREEN_ROUTE, SCREEN_MAP
+from src.constants import SCREEN_ROUTE, SCREEN_MAP, SCREEN_WASH_MAP
 
 
 class JournalScreen(BaseScreen):
@@ -34,7 +34,7 @@ class JournalScreen(BaseScreen):
             return
         state = self.game.state
         if state.all_stops_complete() and self._map_btn.handle_event(event):
-            state.go_to(SCREEN_MAP)
+            state.go_to(SCREEN_WASH_MAP)
             return
         if event.type == pygame.KEYDOWN:
             if event.key in (pygame.K_ESCAPE, pygame.K_b):
