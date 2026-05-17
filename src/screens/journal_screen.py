@@ -9,7 +9,7 @@ _HEADER_H  = 60
 _BOTTOM_H  = 70
 _COLS      = 4
 _CARD_W    = 220
-_CARD_H    = 88
+_CARD_H    = 116
 _PAD_X     = 18
 _PAD_Y     = 14
 
@@ -119,21 +119,29 @@ class JournalScreen(BaseScreen):
 
                 # Stop number + token name + category
                 tx = cx + 8 + 48 + 10
+                avail_w = _CARD_W - (tx - cx) - 8
                 num_s = self._font_xs.render(f"Stop {stop.id}", True, C.MID_GREY)
                 surface.blit(num_s, (tx, cy + 10))
 
-                tok_s = self._font_sm.render(stop.token, True, C.TEAL_DARK)
-                surface.blit(tok_s, (tx, cy + 10 + num_s.get_height() + 2))
+                text_y = cy + 10 + num_s.get_height() + 3
+                token_lines = _wrap_to_lines(stop.token, self._font_sm, avail_w, max_lines=2)
+                for line in token_lines:
+                    tok_s = self._font_sm.render(line, True, C.TEAL_DARK)
+                    surface.blit(tok_s, (tx, text_y))
+                    text_y += self._font_sm.get_height() + 2
 
-                avail_w = _CARD_W - tx + cx - 8
-                cat = stop.primary_category or ""
-                # Truncate category if too long
-                cat_s = self._font_xs.render(cat, True, C.RUST)
-                if cat_s.get_width() > avail_w:
-                    while cat and self._font_xs.size(cat + "…")[0] > avail_w:
-                        cat = cat[:-1]
-                    cat_s = self._font_xs.render(cat + "…", True, C.RUST)
-                surface.blit(cat_s, (tx, cy + _CARD_H - cat_s.get_height() - 10))
+                cat_y = text_y + 2
+                cat_bottom = cy + _CARD_H - 8
+                cat_lines = _wrap_to_lines(
+                    stop.primary_category or "",
+                    self._font_xs,
+                    avail_w,
+                    max_lines=max(1, (cat_bottom - cat_y) // (self._font_xs.get_height() + 1)),
+                )
+                for line in cat_lines:
+                    cat_s = self._font_xs.render(line, True, C.RUST)
+                    surface.blit(cat_s, (tx, cat_y))
+                    cat_y += self._font_xs.get_height() + 1
 
             else:
                 # Grey placeholder
@@ -169,3 +177,23 @@ class JournalScreen(BaseScreen):
         self._back_btn.draw(surface)
         if state.all_stops_complete():
             self._map_btn.draw(surface)
+
+
+def _wrap_to_lines(text, font, max_w, max_lines=None):
+    words = text.split()
+    lines = []
+    current = []
+
+    for word in words:
+        test = " ".join(current + [word])
+        if not current or font.size(test)[0] <= max_w:
+            current.append(word)
+            continue
+        lines.append(" ".join(current))
+        current = [word]
+        if max_lines and len(lines) >= max_lines:
+            return lines
+
+    if current and (not max_lines or len(lines) < max_lines):
+        lines.append(" ".join(current))
+    return lines

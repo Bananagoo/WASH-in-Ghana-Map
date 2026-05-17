@@ -430,11 +430,14 @@ class WashMapScreen(BaseScreen):
         strip = pygame.Rect(rect.left + 2, rect.top + 2, 5, rect.height - 4)
         pygame.draw.rect(surface, colour, strip, border_radius=3)
 
-        # Category name (multi-line, split on \n)
-        lines = cat_name.split("\n")
+        # Category name wraps inside the card instead of overflowing.
+        lines = []
+        for part in cat_name.split("\n"):
+            lines.extend(_wrap_to_lines(part, self._font_xs, rect.width - 20))
         ty = rect.top + 7
-        for line in lines[:3]:
-            ls = self._font_xs.render(line, True, colour)
+        max_lines = max(1, (card["slots"][0].top - ty - 3) // (self._font_xs.get_height() + 2))
+        for line in lines[:max_lines]:
+            ls = self._font_xs.render(line, True, C.OFF_WHITE)
             surface.blit(ls, (rect.left + 12, ty))
             ty += self._font_xs.get_height() + 2
 
@@ -457,3 +460,19 @@ class WashMapScreen(BaseScreen):
                 pygame.draw.rect(surface, (55, 85, 115), slot, 1, border_radius=5)
                 plus = self._font_xs.render("+", True, (55, 85, 115))
                 surface.blit(plus, plus.get_rect(center=slot.center))
+
+
+def _wrap_to_lines(text, font, max_w):
+    words = text.split()
+    lines = []
+    current = []
+    for word in words:
+        test = " ".join(current + [word])
+        if not current or font.size(test)[0] <= max_w:
+            current.append(word)
+            continue
+        lines.append(" ".join(current))
+        current = [word]
+    if current:
+        lines.append(" ".join(current))
+    return lines
