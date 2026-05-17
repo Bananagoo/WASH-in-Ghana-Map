@@ -42,7 +42,7 @@ _TOKEN_REMINDERS = {
     "Black Star Coin": "National development, public memory, and basic services.",
     "First Aid Cross": "WASH impacts on health systems and care access.",
     "Stream Stone":    "Water shaped by authority, land, and spiritual meaning.",
-    "Toilet":          "Sanitation design connected to dignity and safety.",
+    "Toilet":          "An entrepreneur built a sanitation business from lived experience.",
     "Histogram":       "Data, monitoring, and accountability in WASH systems.",
     "Pipe Valve":      "Centralized treatment, skilled workers, and reliable infrastructure.",
     "Bar of Soap":     "Hygiene education and everyday disease prevention.",
