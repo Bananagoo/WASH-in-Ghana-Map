@@ -43,7 +43,7 @@ class Game:
 
     async def run(self):
         self._surface = pygame.display.set_mode(
-            (C.SCREEN_WIDTH, C.SCREEN_HEIGHT), pygame.RESIZABLE
+            (C.SCREEN_WIDTH, C.SCREEN_HEIGHT)
         )
         pygame.display.set_caption(C.WINDOW_TITLE)
         self._clock = pygame.time.Clock()
