@@ -5,7 +5,7 @@ from src.screens.base_screen import BaseScreen
 from src.ui import Button, FontCache, draw_wrapped_text
 from src.assets import token_badge
 from src import config as C
-from src.constants import SCREEN_TITLE, SCREEN_WASH_MAP
+from src.constants import SCREEN_WASH_MAP
 
 _HEADER_H = 65
 _BOTTOM_H = 65
@@ -111,8 +111,7 @@ class WashResultScreen(BaseScreen):
 
         if self._again_btn.handle_event(event):
             self.game.audio.play("click")
-            state.reset()
-            state.go_to(SCREEN_TITLE)
+            self.game.restart_to_title()
             return
 
         if event.type == pygame.KEYDOWN:

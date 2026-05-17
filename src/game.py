@@ -46,6 +46,22 @@ class Game:
         self._surface: pygame.Surface = None
         self._clock: pygame.time.Clock = None
 
+    def restart_to_title(self):
+        self.state = GameState(total_stops=len(self.stops))
+        self.screen_map = {
+            SCREEN_TITLE:    TitleScreen(self),
+            SCREEN_ROUTE:    RouteScreen(self),
+            SCREEN_STOP:     StopScreen(self),
+            SCREEN_JOURNAL:  JournalScreen(self),
+            SCREEN_MAP:      SystemsMapScreen(self),
+            SCREEN_FEEDBACK:    FeedbackScreen(self),
+            SCREEN_FINAL:       FinalScreen(self),
+            SCREEN_WASH_MAP:    WashMapScreen(self),
+            SCREEN_WASH_RESULT: WashResultScreen(self),
+        }
+        self._active_screen_id = ""
+        self._switch_to(SCREEN_TITLE)
+
     async def run(self):
         self._surface = pygame.display.set_mode(
             (C.SCREEN_WIDTH, C.SCREEN_HEIGHT)
