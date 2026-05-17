@@ -159,12 +159,6 @@ class TitleScreen(BaseScreen):
 
         surface.set_clip(None)
 
-        # Scroll hint
-        if self._max_text_scroll > 0:
-            hint_s = self._font_xs.render("↑↓ scroll", True, _PANEL_BDR)
-            surface.blit(hint_s, (panel_rect.right - hint_s.get_width() - C.PAD,
-                                  panel_rect.bottom - hint_s.get_height() - 4))
-
         # ── Start button ──────────────────────────────────────────────────
         self._start_btn.draw(surface)
 

@@ -2,15 +2,12 @@
   "title": "Mapping WASH",
   "subtitle": "A Systems Journey Through Ghana",
   "course": "SYDE 599 — Systems Studies in Water, Environment, and Health",
-
   "tutorial": [
     "Welcome to Mapping WASH, an interactive field-journal game based on SYDE 599: Systems Studies in Water, Environment, and Health. This course explores water, sanitation, and hygiene (WASH) through a mix of lectures, readings, field visits, guest speakers, community conversations, and personal reflection.",
     "In this journey, WASH is not treated as only pipes, pumps, toilets, or treatment plants. Those physical pieces matter, but they are only the hardware of the system. Just as important is the software: governance, financing, education, culture, trust, maintenance, behaviour change, community ownership, and the people responsible for keeping systems working. Each location on the route shows how WASH connects technical systems with health, politics, history, gender, climate, livelihoods, and lived experience.",
     "You will move through the course route stop by stop. At each location, you will open a short field-journal card based on a real course activity, site visit, lecture, reading, or reflection. Each card includes a key image, a collectible token, and several systems lenses that show how that stop connects to the larger WASH system.",
-    "Walk along the route and visit each unlocked stop in order. At each stop, read the field journal card, look for the systems lenses, and collect the token before moving to the next location.",
-    "At the end, use the tokens to build a WASH systems diagram. This is not a complete map of Ghana's WASH system. It is a learning journey through the places, people, and ideas that changed how I understand WASH: from a technical service to a complex system shaped by infrastructure, institutions, culture, health, environment, and everyday life. Press Space or click Begin to start."
+    "Walk along the route and visit each unlocked stop in order. At each stop, read the field journal card, look for the systems lenses, and collect the token before moving to the next location."
   ],
-
   "route_instructions": "Click the highlighted stop to open your field note. Collect the token to unlock the next stop.",
   "stop_collect_button": "Collect Token",
   "stop_back_button": "Back to Route",
@@ -23,7 +20,6 @@
   "map_token_placed": "Token placed! Drag another or compare your diagram when all 16 are placed.",
   "map_finish_button": "Compare My Diagram →",
   "map_back_button": "Back to Journal",
-
   "feedback_title": "How did your diagram compare?",
   "feedback_intro": "Here is how your placements compare to the primary dimension from the field notes.",
   "feedback_score_label": "Your score",
@@ -33,7 +29,6 @@
   "feedback_key_column": "Primary Dimension",
   "feedback_next_button": "See Final Reflection",
   "feedback_restart_button": "Play Again",
-
   "final_title": "A System, Not a Sector",
   "final_takeaway": [
     "This is not a complete map of Ghana's WASH system. It is a learning journey through the places, people, and ideas that changed how I understand WASH.",
@@ -43,7 +38,6 @@
   ],
   "final_credit": "SYDE 599 Knowledge Mobilization — Katherine Langille, 2026",
   "final_restart_button": "Play Again",
-
   "feedback_messages": {
     "perfect": "You mapped every token to its primary system dimension. You have a strong sense of how these pieces connect.",
     "high": "Most of your placements matched the key dimensions. WASH systems are complex — some tokens genuinely fit multiple dimensions.",
