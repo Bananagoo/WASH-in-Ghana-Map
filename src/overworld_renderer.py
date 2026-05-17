@@ -186,13 +186,14 @@ class OverworldRenderer:
     # ── Water ─────────────────────────────────────────────────────────────────
 
     def _draw_water_feature(self, surf):
-        """Draw a compact stream and pond in the open top-right map corner."""
+        """Draw a stream clipped by the top-right edge of the route map."""
         anchors = [
-            (self._w - 26, 28),
-            (self._w - 92, 54),
-            (self._w - 150, 38),
-            (self._w - 206, 72),
-            (self._w - 252, 48),
+            (self._w - 302, -22),
+            (self._w - 244, 22),
+            (self._w - 184, 8),
+            (self._w - 118, 42),
+            (self._w - 52, 24),
+            (self._w + 46, 42),
         ]
         curve = _smooth_polyline(anchors, samples_per_seg=18)
 
@@ -209,17 +210,7 @@ class OverworldRenderer:
                 0.15, 2.6, 2,
             )
 
-        pond = pygame.Rect(self._w - 142, 86, 108, 72)
-        pygame.draw.ellipse(surf, _W_SHORE, pond.inflate(16, 12))
-        pygame.draw.ellipse(surf, _W_EDGE, pond.inflate(8, 6))
-        pygame.draw.ellipse(surf, _W_DEEP, pond)
-        pygame.draw.arc(surf, _W_LIGHT, pond.inflate(-26, -30), 0.2, 2.7, 2)
-
-        return curve + [
-            (pond.centerx - 30, pond.centery),
-            pond.center,
-            (pond.centerx + 30, pond.centery),
-        ]
+        return curve
 
     # ── Scatter ───────────────────────────────────────────────────────────────
 
