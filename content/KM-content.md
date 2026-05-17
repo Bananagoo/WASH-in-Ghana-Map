@@ -123,7 +123,7 @@ This changed how I wanted to move through the course. Instead of asking only, �
 **WASH focus:** Water  
 **Systems lenses:** Health & Wellbeing; Infrastructure & Technology; Data, Knowledge & Collaboration
 
-Our first classroom session began with water at the source. We learned about source water protection, water quality, contamination pathways, and multiple-barrier treatment. During the Faircap activity, the idea of “safe water” became more concrete. Clear water can still carry risks, so testing matters because it helps reveal what people cannot see.
+Our first classroom session began with water at the source. We learned about source water protection, water quality, contamination pathways, and multiple-barrier treatment. During the Faircap activity, the idea of “safe water” gained more precision. Clear water can still carry risks, so testing matters because it helps reveal what people cannot see.
 
 The F-diagram helped me picture how contamination moves. Fecal matter can travel through fingers, flies, fields, fluids, and food before it reaches another person. Each WASH action becomes a barrier in that chain. Toilets separate waste from people. Handwashing interrupts contamination on hands. Safe storage protects water after collection. Treatment reduces pathogens. Cairncross et al. explain that water quality, sanitation, and hygiene are all connected to diarrheal disease prevention, which shows why these barriers have to work together [1].
 
@@ -154,9 +154,9 @@ At Lavender Hill, we met Frederik Sorenson and Abou, who walked us through a fec
 
 Before this visit, I mostly thought about sanitation at the level of the toilet. At this stop, I started to picture everything that happens after the toilet is used. Fecal sludge management includes containment, emptying, transport, treatment, and safe reuse or disposal. WHO uses sanitation safety planning to manage health risks across this full chain, from containment to final end use or disposal [1].
 
-The facility also introduced resource recovery. Waste can still hold value after treatment. Treated water, dried solids, fertilizer, and fuel products can become part of the sanitation economy. Diener et al. explain that resource recovery can create financial incentives for fecal sludge management and shift attention toward useful products from treatment processes [2].
+The facility also introduced resource recovery. Waste can still hold value after treatment. Treated water can be used for pisciculture, dried solids as fertilizer, and fuel products can become part of the sanitation economy. Diener et al. explain that resource recovery can create financial incentives for fecal sludge management and shift attention toward useful products from treatment processes [2].
 
-The part that stayed with me most was the political side of the system. The facility had technical value and a clear purpose, yet we learned that its operation was affected by changes in government plans. That made sanitation feel more fragile. A treatment process can be well-designed, but it still depends on institutions, contracts, funding, regulation, and long-term political support. Strande et al. describe fecal sludge management as a systems problem that requires technology, management, and planning together [3].
+The part that stayed with me most was the political side of the system. The facility had technical value and a clear purpose, yet we learned that its operation was affected by changes in government plans. A treatment process can be well-designed, but it still depends on institutions, contracts, funding, regulation, and long-term political support. Strande et al. describe fecal sludge management as a systems problem that requires technology, management, and planning together [3].
 
 This stop changed how I understood sanitation infrastructure. I began to see a treatment plant as a meeting point between engineering and governance. Trucks have to arrive. Operators have to be paid. Treatment steps have to work. End products need a safe market. Policies have to survive political change. When one part is missing, the sludge does not disappear. It moves somewhere else in the environment.
 
@@ -235,11 +235,11 @@ This stop changed how I understood the health side of WASH. A water or sanitatio
 
 After the clinic visit, we met Nana Oteng Korankye II, the chief of Berekuso, to receive permission to visit the sacred stream. We were able to move into a space where water was connected to authority, land, spirituality, and respect.
 
-The stream carried more than just water. It carried rules about who could enter, who could give permission, and who could alter the land. The visit made me think about water as something held within relationships. Landowners, traditional councils, government rules, and community expectations all shaped what could happen around the stream.
+The stream carried rules about who could enter, who could give permission, and who could alter the land. The visit made me think about water as something held within relationships. Landowners, traditional councils, government rules, and community expectations all shaped what could happen around the stream.
 
 The hydrosocial cycle helped me make sense of this. It explains that water is shaped by social, political, and economic processes, while also shaping society in return [1]. At Berekuso, the stream shaped local meaning, and local authority shaped how the stream was protected.
 
-Research on sacred groves in Ghana also helped me understand this stop. Esia-Donkoh explains that sacred landscapes can preserve community histories, ancestral knowledge, biodiversity, and local environmental practices [2]. The paper also shows that traditional structures and local actors are important for preserving these places.
+Research on sacred groves in Ghana, which we learned about at a later stop, also helped me understand this concept. Esia-Donkoh explains that sacred landscapes can preserve community histories, ancestral knowledge, biodiversity, and local environmental practices [2]. The paper also shows that traditional structures and local actors are important for preserving these places.
 
 This stop made me more cautious about technical solutions. A WASH project in a place like this would need to begin with relationships. It would need to understand who has authority, whose permission matters, what rules already exist, and what the water means to the community. Without that, an intervention could damage the same social system that helps protect the water.
 
@@ -317,7 +317,7 @@ This stop changed how I understood knowledge in WASH. Better decisions depend on
 
 At the GWCL Weija Treatment Plant, we saw centralized water treatment using the Densu River, dammed at Weija, as the source water. This stop allowed us to follow a concrete example of the treatment process from lecture.
 
-The process map shows the treatment sequence from left to right. First, raw water enters through the intake and is pumped into the treatment system. This is where the plant begins turning source water into drinking water, but the source still matters because pollution upstream can increase the treatment burden.
+The process map below shows the treatment sequence from left to right. First, raw water enters through the intake and is pumped into the treatment system. This is where the plant begins turning source water into drinking water, but the source still matters because pollution upstream can increase the treatment burden.
 
 Next, the water moves into coagulation and flocculation. In the graphic, alum is added during coagulation, then the water enters fast mixing. This helps small particles clump together. During flocculation, the mixing slows down so larger flocs can form and settle. The de-sludger in the map shows that treatment also produces waste that has to be removed and managed. Conventional treatment commonly uses coagulation, flocculation, clarification, filtration, and disinfection to reduce risk in drinking water [1].
 
@@ -350,17 +350,15 @@ A student presentation on Adams and Nyantakyi-Frimpong helped me connect this te
 
 At the Accra School of Hygiene, we learned about the long history of sanitation education in Ghana. The school opened in 1925 to train sanitation inspectors and has since expanded to over 500 students studying environmental safety, sanitation, and occupational health.
 
-We also heard about student research on community education campaigns, banana peel as a coagulant, and upcycled materials. These projects connected hygiene and sanitation to local problem-solving. They also showed how technical ideas become more useful when they are paired with education.
+We also heard about student research including using banana peel as a coagulant, and initiatives using upcycled materials. These projects connected hygiene and sanitation to local problem-solving.
 
-In Korle-Gonno, we received permission from the chief before entering the community. We visited schools and a library, saw a borehole water installation, and met a hygiene club. The students were learning about handwashing, WASH-related illness, and sachet bag recycling. Hygiene promotion focuses on everyday practices that reduce disease, especially through safe hygiene behaviours like handwashing with soap [1].
+In Korle-Gonno, we received permission from the chief before entering the community. We visited schools and a library, saw a borehole water installation, and met a hygiene club. The students were learning about handwashing, WASH-related illness, and sachet bag recycling.
 
-A young girl explained to us that handwashing reduces disease. This connects directly to the F-diagram. Fecal contamination can move through hands and food before reaching another person, and handwashing blocks that pathway [2]. At the community library, Belinda explained that children wash their hands before and after touching books, remove their shoes for cleanliness, and use the library as a safe learning space. This was one of the clearest examples of the software side of WASH. Infrastructure matters, but education helps people use and protect it.
+A young girl explained to us that handwashing reduces disease. This connects directly to the F-diagram. Fecal contamination can move through hands and food before reaching another person, and handwashing blocks that pathway [1]. At the community library, Belinda explained that children wash their hands before and after touching books, remove their shoes for cleanliness, and use the library as a safe learning space. This was one of the clearest examples of the software side of WASH. Infrastructure matters, but education helps people use and protect it.
 
 ### References
 
-[1] London School of Hygiene & Tropical Medicine, “What are water, sanitation and hygiene (WASH) interventions and why are they important?” *Water, Sanitation and Hygiene Study Guide*, University of London, 2017.
-
-[2] S. Cairncross, C. Hunt, S. Boisson, K. Bostoen, V. Curtis, I. C. H. Fung, and W. P. Schmidt, “Water, sanitation and hygiene for the prevention of diarrhoea,” *International Journal of Epidemiology*, vol. 39, no. suppl_1, pp. i193-i205, 2010.
+[1] S. Cairncross, C. Hunt, S. Boisson, K. Bostoen, V. Curtis, I. C. H. Fung, and W. P. Schmidt, “Water, sanitation and hygiene for the prevention of diarrhoea,” *International Journal of Epidemiology*, vol. 39, no. suppl_1, pp. i193-i205, 2010.
 
 ---
 
@@ -398,7 +396,7 @@ This stop connected to WASH through history and power. The same landscapes where
 **WASH focus:** Water; Sanitation; Hygiene  
 **Systems lenses:** Gender, Equity & Safety; Health & Wellbeing; Livelihoods & Economy; Culture, History & Place
 
-At CEWEFIA, we saw how gender, WASH, livelihoods, food safety, and coastal ecosystems connect through fish processing. CEWEFIA works with coastal communities through a blue economy lens. Their work supports improved processing, women's leadership, and alternative livelihoods. The main idea was that when coastal communities are trained and women leaders are supported, ecosystems and livelihoods have a better chance of surviving together.
+At CEWEFIA, we saw how gender, WASH, livelihoods, food safety, and coastal ecosystems connect through fish processing. CEWEFIA works with coastal communities through a blue economy lens. Their work supports improved processing through supplying better ovens, women's leadership, and alternative livelihood training. The main idea was that when coastal communities are trained and women leaders are supported, ecosystems and livelihoods have a better chance of surviving together.
 
 CEWEFIA's work also connected fish processing to women's rights and protection from gender-based violence. Nunbogu and Elliott explain that WASH-related gender-based violence can be structural, psychological, sexual, and physical [1]. The structural and psychological parts stood out most here. Women's safety and dignity were connected to income, market pressure, and the conditions where food was processed.
 
@@ -406,7 +404,7 @@ In the processing centre, we saw improved ovens, wet rooms, and separate drying 
 
 The community visit showed why safer processing is difficult to sustain. We saw fish drying on nets where animals could step, fish waste nearby, and women working while also caring for children. When we spoke with fishmongers, what stayed with me was their disappointment that we had seen those conditions, because they explained that it did not reflect the practices they follow. They explained that improved methods can cost more. If they have to charge more for cleaner or more safely processed fish, customers may still choose cheaper fish from people using less safe methods. FAO has also reported that many women fish processors in Ghana still use traditional smoking methods that expose them and their children to smoke and can limit food safety outcomes [3].
 
-This stop changed how I understood food safety. Safer WASH practices have to protect health without punishing the women whose livelihoods already operate under pressure. Skills training, savings systems, and market incentives matter because they help safer practices become realistic.
+This stop changed how I understood food safety. Safer WASH practices have to protect health without punishing the women whose livelihoods already operate under pressure.
 
 ### References
 
@@ -427,7 +425,7 @@ This stop changed how I understood food safety. Safer WASH practices have to pro
 **WASH focus:** Water; Cross-cutting  
 **Systems lenses:** Culture, History & Place; Climate, Environment & Ecosystems; Governance, Finance & Institutions; Data, Knowledge & Collaboration
 
-At Nsofa Forest, we visited a sacred grove with Professor Kobina Esia-Donkoh from the Department of Population and Health at the University of Cape Coast, alongside members of the Eshirow Community. The community chief gave us his blessing to walk through the grove. This made the visit feel guided by local authority, respect, and community knowledge.
+At Nsofa Forest, we visited a sacred grove with Professor Kobina Esia-Donkoh from the Department of Population and Health at the University of Cape Coast, alongside members of the Eshirow Community. The community chief gave us his blessing to walk through the grove.
 
 During the visit, we learned about the cultural and spiritual beliefs connected to the forest. We also participated respectfully in a ritual where alcohol was poured at a place connected to the god of the forest. Permission mattered here. The forest was a living place with rules, memory, and responsibility.
 
@@ -435,7 +433,7 @@ In a paper Professor Esia-Donkoh wrote about sacred groves in Ghana, he explains
 
 The spiritual meaning of the grove helped create rules around access, permission, and use. Esia-Donkoh explains that sacred groves are often protected through taboos, rituals, and traditional authority. In some groves, people could not farm, hunt, or cut trees. Herbs and dead wood could only be collected after permission from the priest or local authorities [1].
 
-This helped me see spirituality as part of environmental protection. In the paper, ancestors are described as helping communities with rains and good harvests, and Esia-Donkoh notes that Nsofa held similar significance [1]. Protecting the grove also protected trees, plants, and biodiversity. The belief system gave people a reason to care for the forest across generations.
+This helped me understand spirituality as part of environmental protection. In his paper, Esia-Donkoh explains that ancestors are understood as helping communities receive rain and good harvests through rituals. The protection of sacred trees also has an ecological role because forest cover helps support shade, soil moisture, and local water cycles [1]. In this way, the spiritual meaning of the grove helped protect the environment in practical ways too.
 
 The visit also showed why knowledge-sharing matters. Education should include community knowledge so different knowledge systems can share space instead of creating conflict. Going forward, this stop makes me want to approach conservation and WASH work more carefully. Local knowledge systems should be included in the solution.
 
