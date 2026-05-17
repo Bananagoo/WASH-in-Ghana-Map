@@ -2,7 +2,7 @@ import pygame
 from typing import Callable, Optional, Tuple
 from src import config as C
 
-WRAP_SAFETY = 0.78
+WRAP_SAFETY = 1.0
 
 
 class Button:

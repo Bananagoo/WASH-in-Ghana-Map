@@ -1,6 +1,6 @@
 import pygame
 from src.screens.base_screen import BaseScreen
-from src.ui import Button, draw_wrapped_text, FontCache, draw_panel
+from src.ui import Button, FontCache, draw_panel
 from src.assets import load_image_cover
 from src import config as C
 from src.constants import SCREEN_ROUTE
@@ -53,25 +53,15 @@ class TitleScreen(BaseScreen):
 
         self._front_image = load_image_cover("photos/frontimage.jpg", _FRONT_IMG_W, _FRONT_IMG_H)
 
-        self._text_scroll = 0
-        self._max_text_scroll = 0
-
     def handle_event(self, event: pygame.event.Event):
         if self._start_btn.handle_event(event):
             self.game.audio.play("click")
             self.game.state.go_to(SCREEN_ROUTE)
             return
-        if event.type == pygame.MOUSEWHEEL:
-            self._text_scroll = max(0, min(
-                self._text_scroll - event.y * 20, self._max_text_scroll))
         if event.type == pygame.KEYDOWN:
             if event.key in (pygame.K_SPACE, pygame.K_RETURN):
                 self.game.audio.play("click")
                 self.game.state.go_to(SCREEN_ROUTE)
-            elif event.key == pygame.K_DOWN:
-                self._text_scroll = min(self._text_scroll + 24, self._max_text_scroll)
-            elif event.key == pygame.K_UP:
-                self._text_scroll = max(self._text_scroll - 24, 0)
 
     def draw(self, surface: pygame.Surface):
         w, h = C.SCREEN_WIDTH, C.SCREEN_HEIGHT
@@ -113,7 +103,7 @@ class TitleScreen(BaseScreen):
                          (panel_rect.left + C.PAD_LG, rule_y),
                          (panel_rect.right - C.PAD_LG, rule_y), 1)
 
-        # Front image — larger feature image in the top-right of the panel
+        # Front image — top-right corner of panel
         img_margin = C.PAD_LG
         img_x = panel_rect.right - _FRONT_IMG_W - img_margin
         img_y = rule_y + 8
@@ -124,19 +114,12 @@ class TitleScreen(BaseScreen):
         else:
             image_rect = pygame.Rect(0, 0, 0, 0)
 
-        # Clip panel interior for scrollable text
-        text_clip = pygame.Rect(
-            panel_rect.left + C.PAD_LG, rule_y + 12,
-            panel_rect.width - C.PAD_LG * 2,
-            panel_rect.bottom - rule_y - C.PAD_LG - 12,
-        )
-        surface.set_clip(text_clip)
-
-        text_x = panel_rect.left + C.PAD_LG
+        # Tutorial text — wraps around the image
+        text_x      = panel_rect.left + C.PAD_LG
         full_text_w = panel_rect.width - C.PAD_LG * 2
         side_text_w = max(260, image_rect.left - text_x - C.PAD_LG)
 
-        ty = text_clip.top - self._text_scroll
+        ty = rule_y + 12
         for line in self._tutorial_lines:
             ty = _draw_wrapped_around_image(
                 surface, line, self._font_sm, C.OFF_WHITE,
@@ -144,20 +127,6 @@ class TitleScreen(BaseScreen):
                 line_spacing=5,
             )
             ty += 8
-
-        # Measure total height at scroll=0 to avoid wrap-dependent feedback loop
-        if not self._max_text_scroll:
-            my = text_clip.top
-            for line in self._tutorial_lines:
-                my = _draw_wrapped_around_image(
-                    None, line, self._font_sm, C.OFF_WHITE,
-                    text_x, my, full_text_w, side_text_w, image_rect,
-                    line_spacing=5,
-                )
-                my += 8
-            self._max_text_scroll = max(0, (my - text_clip.top) - text_clip.height)
-
-        surface.set_clip(None)
 
         # ── Start button ──────────────────────────────────────────────────
         self._start_btn.draw(surface)
@@ -168,7 +137,6 @@ class TitleScreen(BaseScreen):
 
 def _draw_wrapped_around_image(surface, text, font, colour, x, y,
                                full_w, side_w, image_rect, line_spacing=4):
-    """Draw text wrapping around image_rect. Pass surface=None for a dry-run measurement."""
     words = text.split()
     current = []
 
@@ -184,16 +152,12 @@ def _draw_wrapped_around_image(surface, text, font, colour, x, y,
         if not current or font.size(test)[0] <= max_w:
             current.append(word)
             continue
-
-        line = " ".join(current)
-        if surface is not None:
-            surface.blit(font.render(line, True, colour), (x, y))
+        surface.blit(font.render(" ".join(current), True, colour), (x, y))
         y += font.get_height() + line_spacing
         current = [word]
 
     if current:
-        if surface is not None:
-            surface.blit(font.render(" ".join(current), True, colour), (x, y))
+        surface.blit(font.render(" ".join(current), True, colour), (x, y))
         y += font.get_height() + line_spacing
 
     return y

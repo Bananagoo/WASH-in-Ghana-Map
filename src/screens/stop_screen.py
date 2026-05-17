@@ -361,7 +361,7 @@ class StopScreen(BaseScreen):
 
 
 def _wrap(text, font, max_w):
-    max_w = int(max_w * 0.78)
+    max_w = int(max_w)
     words = text.split()
     lines, cur = [], []
     for word in words:
