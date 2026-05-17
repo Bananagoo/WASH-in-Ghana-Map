@@ -10,9 +10,9 @@ from src.constants import SCREEN_ROUTE, SCREEN_WASH_RESULT
 _HUB_CX   = 594   # centre x of diagram area
 _HUB_CY   = 356   # centre y
 _HUB_R    = 50    # hub circle radius
-_NODE_R   = 205   # distance from hub centre to each dimension node
-_CARD_W   = 140   # dimension card width
-_CARD_H   = 104   # dimension card height
+_NODE_R   = 230   # distance from hub centre to each dimension node
+_CARD_W   = 150   # dimension card width
+_CARD_H   = 112   # dimension card height
 
 HEADER_H  = 65
 BOTTOM_H  = 72
@@ -20,8 +20,8 @@ TRAY_W    = 165
 PAD       = 10
 BADGE_SZ  = 30
 ITEM_H    = 44
-SLOT_W    = 62    # each of the two slots per card
-SLOT_H    = 36
+SLOT_W    = 65    # each of the two slots per card
+SLOT_H    = 38
 
 # angle (deg, clockwise from top) → category
 _CATEGORIES = [
@@ -57,9 +57,9 @@ _TOKEN_REMINDERS = {
 # Slightly lighter background for the diagram area
 _DIAGRAM_BG  = (240, 238, 230)
 _TRAY_BG     = (22,  40,  70)
-_CARD_BG     = (55,  90, 145)
-_SLOT_FILLED = (70, 115, 185)
-_SLOT_EMPTY  = (38,  65, 108)
+_CARD_BG     = (78, 118, 176)
+_SLOT_FILLED = (95, 140, 205)
+_SLOT_EMPTY  = (48,  78, 125)
 _HUB_COL     = (22,  45,  95)
 _LINE_COL    = (160, 165, 175)
 
@@ -108,7 +108,7 @@ class WashMapScreen(BaseScreen):
             border_radius=14,
         )
         self._start_btn = Button(
-            pygame.Rect(w // 2 - 110, 0, 220, 40),  # y set in draw
+            pygame.Rect(w // 2 - 110, 0, 220, 38),  # y set in draw
             "Start Building",
             self._font_md,
             colour=C.GOLD, hover_colour=C.RUST, text_colour=C.DARK_GREY,
@@ -411,7 +411,7 @@ class WashMapScreen(BaseScreen):
         dim.set_alpha(210)
         surface.blit(dim, (0, 0))
 
-        pw, ph = 560, 310
+        pw, ph = 560, 245
         px = w // 2 - pw // 2
         py = h // 2 - ph // 2
         draw_panel(surface, pygame.Rect(px, py, pw, ph),
@@ -420,17 +420,17 @@ class WashMapScreen(BaseScreen):
         ty = py + 18
         title_s = self._font_md.render("Build Your WASH Systems Diagram", True, C.GOLD)
         surface.blit(title_s, title_s.get_rect(centerx=w // 2, top=ty))
-        ty += title_s.get_height() + 8
+        ty += title_s.get_height() + 7
         pygame.draw.line(surface, (95, 155, 215),
                          (px + 20, ty), (px + pw - 20, ty), 1)
-        ty += 10
+        ty += 8
 
         for line in _INTRO_LINES:
             ls = self._font_xs.render(line, True, C.OFF_WHITE)
             surface.blit(ls, ls.get_rect(centerx=w // 2, top=ty))
-            ty += ls.get_height() + 6
+            ty += ls.get_height() + 5
 
-        ty += 8
+        ty += 7
         self._start_btn.rect.top = ty
         self._start_btn.draw(surface)
 
