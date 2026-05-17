@@ -80,6 +80,69 @@ class FloatUpEffect:
 
 
 # ------------------------------------------------------------------
+# TokenCoinEffect — circular medallion pops, bounces, then floats up
+# ------------------------------------------------------------------
+
+class TokenCoinEffect:
+    """
+    Three-phase animation for token collection:
+      pop   (0 → 0.25 s): badge scales from 0 → 1.3 × target_size
+      settle(0.25 → 0.45): scales back to 1.0 × target_size
+      float (0.45 → 1.4 s): drifts upward and fades out
+    """
+    def __init__(self, badge: pygame.Surface, pos: Tuple[int, int],
+                 target_size: int = 80, duration: float = 1.55):
+        self._badge_src  = badge
+        self._cx, self._cy = pos
+        self._target     = target_size
+        self._tween      = Tween(duration)
+        self._pop_end    = 0.25 / duration
+        self._settle_end = 0.45 / duration
+        self.done        = False
+
+    def update(self, dt: float):
+        self._tween.update(dt)
+        if self._tween.done:
+            self.done = True
+
+    def draw(self, surface: pygame.Surface):
+        t = self._tween.value
+        T = self._tween.duration
+        pop_e    = self._pop_end
+        settle_e = self._settle_end
+
+        if t <= pop_e:
+            scale  = ease_out(t / pop_e) * 1.30
+            alpha  = 255
+            drift  = 0
+        elif t <= settle_e:
+            frac   = (t - pop_e) / (settle_e - pop_e)
+            scale  = 1.30 + (1.0 - 1.30) * ease_out(frac)
+            alpha  = 255
+            drift  = 0
+        else:
+            frac   = (t - settle_e) / (1.0 - settle_e)
+            scale  = 1.0
+            alpha  = int((1.0 - ease_in_out(frac)) * 255)
+            drift  = int(90 * ease_out(frac))
+
+        sz  = max(1, int(self._target * scale))
+        img = pygame.transform.smoothscale(self._badge_src, (sz, sz))
+
+        # Glow ring (fades with alpha)
+        if alpha > 30:
+            glow_r = sz // 2 + max(2, int(6 * (1.0 - t)))
+            glow_surf = pygame.Surface((glow_r * 2 + 4, glow_r * 2 + 4), pygame.SRCALPHA)
+            ga = min(150, alpha)
+            pygame.draw.circle(glow_surf, (255, 230, 100, ga),
+                               (glow_r + 2, glow_r + 2), glow_r, 4)
+            surface.blit(glow_surf, (self._cx - glow_r - 2, self._cy - drift - glow_r - 2))
+
+        img.set_alpha(alpha)
+        surface.blit(img, (self._cx - sz // 2, self._cy - drift - sz // 2))
+
+
+# ------------------------------------------------------------------
 # PulseEffect — oscillating scale for stop markers
 # ------------------------------------------------------------------
 

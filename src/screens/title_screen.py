@@ -53,15 +53,25 @@ class TitleScreen(BaseScreen):
 
         self._front_image = load_image_fit("photos/frontimage.jpg", _FRONT_IMG_W, _FRONT_IMG_H)
 
+        self._text_scroll = 0
+        self._max_text_scroll = 0
+
     def handle_event(self, event: pygame.event.Event):
         if self._start_btn.handle_event(event):
             self.game.audio.play("click")
             self.game.state.go_to(SCREEN_ROUTE)
             return
+        if event.type == pygame.MOUSEWHEEL:
+            self._text_scroll = max(0, min(
+                self._text_scroll - event.y * 20, self._max_text_scroll))
         if event.type == pygame.KEYDOWN:
             if event.key in (pygame.K_SPACE, pygame.K_RETURN):
                 self.game.audio.play("click")
                 self.game.state.go_to(SCREEN_ROUTE)
+            elif event.key == pygame.K_DOWN:
+                self._text_scroll = min(self._text_scroll + 24, self._max_text_scroll)
+            elif event.key == pygame.K_UP:
+                self._text_scroll = max(self._text_scroll - 24, 0)
 
     def draw(self, surface: pygame.Surface):
         w, h = C.SCREEN_WIDTH, C.SCREEN_HEIGHT
@@ -118,13 +128,32 @@ class TitleScreen(BaseScreen):
         else:
             text_max_w = panel_w - C.PAD_LG * 2
 
-        ty = rule_y + 12
+        # Clip panel interior for scrollable text
+        text_clip = pygame.Rect(
+            panel_rect.left, rule_y + 2,
+            panel_rect.width, panel_rect.bottom - rule_y - 2,
+        )
+        surface.set_clip(text_clip)
+
+        ty = rule_y + 12 - self._text_scroll
         for line in self._tutorial_lines:
             ty = draw_wrapped_text(
                 surface, line, self._font_sm, C.OFF_WHITE,
                 panel_rect.left + C.PAD_LG, ty, text_max_w, line_spacing=5,
             )
             ty += 6
+
+        total_text_h = (ty + self._text_scroll) - (rule_y + 12)
+        panel_text_area = panel_rect.bottom - (rule_y + 12)
+        self._max_text_scroll = max(0, total_text_h - panel_text_area)
+
+        surface.set_clip(None)
+
+        # Scroll hint
+        if self._max_text_scroll > 0:
+            hint_s = self._font_xs.render("↑↓ scroll", True, _PANEL_BDR)
+            surface.blit(hint_s, (panel_rect.right - hint_s.get_width() - C.PAD,
+                                  panel_rect.bottom - hint_s.get_height() - 4))
 
         # ── Start button ──────────────────────────────────────────────────
         self._start_btn.draw(surface)

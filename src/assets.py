@@ -128,17 +128,16 @@ def _i_test_strip(surf, cx, cy, r):
 def _i_sludge_truck(surf, cx, cy, r):
     tw, th = max(8, int(r * 1.65)), max(5, int(r * 0.65))
     x0, y0 = cx - tw//2, cy - th//2 - 1
-    # cargo body
-    pygame.draw.rect(surf, (200, 205, 215), (x0, y0, int(tw * 0.65), th), border_radius=2)
-    # cab
-    pygame.draw.rect(surf, (225, 228, 235), (x0 + int(tw * 0.65), y0 - 3, int(tw * 0.35), th + 3), border_radius=3)
-    # windows on cab
+    # cab on LEFT (front facing right)
+    pygame.draw.rect(surf, (225, 228, 235), (x0, y0 - 3, int(tw * 0.35), th + 3), border_radius=3)
     cw = int(tw * 0.35) - 4
-    pygame.draw.rect(surf, (140, 170, 210), (x0 + int(tw * 0.65) + 2, y0 - 1, cw, th // 2 - 1), border_radius=1)
+    pygame.draw.rect(surf, (140, 170, 210), (x0 + 2, y0 - 1, cw, th // 2 - 1), border_radius=1)
+    # cargo body on RIGHT (back)
+    pygame.draw.rect(surf, (200, 205, 215), (x0 + int(tw * 0.35), y0, int(tw * 0.65), th), border_radius=2)
     # wheels
     wr = max(2, r // 5)
     wy = y0 + th + wr - 1
-    for wx in [x0 + int(tw * 0.2), x0 + int(tw * 0.82)]:
+    for wx in [x0 + int(tw * 0.18), x0 + int(tw * 0.75)]:
         pygame.draw.circle(surf, (55, 55, 55), (wx, wy), wr)
         pygame.draw.circle(surf, (100, 100, 100), (wx, wy), max(1, wr - 2))
 
@@ -150,7 +149,7 @@ def _i_black_star(surf, cx, cy, r):
         pts.append((cx + int(r * math.cos(a)), cy + int(r * math.sin(a))))
         a2 = math.radians(-90 + i * 72 + 36)
         pts.append((cx + int(r * 0.42 * math.cos(a2)), cy + int(r * 0.42 * math.sin(a2))))
-    pygame.draw.polygon(surf, (255, 245, 160), pts)
+    pygame.draw.polygon(surf, (25, 20, 15), pts)
 
 
 def _i_first_aid_cross(surf, cx, cy, r):
@@ -207,13 +206,25 @@ def _i_bar_of_soap(surf, cx, cy, r):
 
 
 def _i_shell(surf, cx, cy, r):
-    for i, (rad_f, start_a) in enumerate([(1.0, 0), (0.7, 40), (0.45, 80), (0.25, 120)]):
-        arc_r = max(1, int(r * rad_f))
-        a1 = math.radians(start_a)
-        a2 = math.radians(start_a + 165)
-        rect = (cx - arc_r, cy - arc_r, arc_r * 2, arc_r * 2)
-        w = max(1, arc_r // 2)
-        pygame.draw.arc(surf, (255, 248, 195), rect, a1, a2, w)
+    # Scallop/fan shell: hinge at bottom, ribs fan upward
+    base_x, base_y = cx, cy + r // 3
+    arc_r = int(r * 1.05)
+    span_start, span_end = -158, -22  # degrees, sweeping over the top
+    n_pts = 14
+    shell_col = (255, 240, 195)
+    rib_col   = (190, 158, 105)
+    pts = [(base_x, base_y)]
+    for i in range(n_pts + 1):
+        a = math.radians(span_start + i * (span_end - span_start) / n_pts)
+        pts.append((base_x + int(arc_r * math.cos(a)), base_y + int(arc_r * math.sin(a))))
+    pygame.draw.polygon(surf, shell_col, pts)
+    n_ribs = 6
+    for i in range(n_ribs + 1):
+        a = math.radians(span_start + i * (span_end - span_start) / n_ribs)
+        px = base_x + int(arc_r * math.cos(a))
+        py = base_y + int(arc_r * math.sin(a))
+        pygame.draw.line(surf, rib_col, (base_x, base_y), (px, py), 1)
+    pygame.draw.circle(surf, rib_col, (base_x, base_y), max(2, r // 6))
 
 
 def _i_fish(surf, cx, cy, r):

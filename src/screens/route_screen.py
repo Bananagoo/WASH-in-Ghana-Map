@@ -8,6 +8,7 @@ from src.path_mask import PathMask
 from src.player_controller import PlayerController
 from src.icon_renderer import draw_icon, get_icon_type
 from src.animation import FloatUpEffect, PulseEffect
+from src.assets import token_badge
 from src import journal_panel
 from src import config as C
 from src.constants import SCREEN_TITLE, SCREEN_STOP, SCREEN_JOURNAL, SCREEN_MAP, SCREEN_WASH_MAP
@@ -66,6 +67,17 @@ class RouteScreen(BaseScreen):
             first = stops[0]
             self._controller.place_at(float(first.route_position.x),
                                       float(first.route_position.y) + 30.0)
+
+        # ── Token badge cache (small badges for map markers) ──────────────
+        if not hasattr(self, "_stop_badges"):
+            self._stop_badges = {
+                s.token: token_badge(s.token, size=24)
+                for s in stops if s.token
+            }
+            self._stop_badges_dim = {
+                tok: _dim_surface(badge)
+                for tok, badge in self._stop_badges.items()
+            }
 
         # ── Float-up token effects ─────────────────────────────────────────
         if not hasattr(self, "_floats"):
@@ -283,10 +295,15 @@ class RouteScreen(BaseScreen):
                 pygame.draw.circle(surface, C.GOLD_LIGHT, (sx, sy), pulse_r, 3)
                 pygame.draw.circle(surface, C.GOLD, (sx, sy), pulse_r + 3, 1)
 
-            # ── Wooden sign icon above marker ─────────────────────────────
-            icon_y    = sy - _MR - 26
-            icon_type = get_icon_type(stop.id, getattr(stop, "icon_type", ""))
-            draw_icon(surface, sx, icon_y, icon_type, size=30, dimmed=locked)
+            # ── Token badge above marker ──────────────────────────────────
+            badge_sz = 24
+            icon_y   = sy - _MR - badge_sz - 4
+            if stop.token:
+                badge = (self._stop_badges_dim.get(stop.token)
+                         if locked else
+                         self._stop_badges.get(stop.token))
+                if badge:
+                    surface.blit(badge, (sx - badge_sz // 2, icon_y))
 
             # ── Hover ring ────────────────────────────────────────────────
             if hovered and not locked:
@@ -427,3 +444,9 @@ class RouteScreen(BaseScreen):
             s = font.render(line, True, C.WHITE)
             surface.blit(s, (tx + pad, iy))
             iy += font.get_height() + 2
+
+
+def _dim_surface(surf: pygame.Surface, alpha: int = 90) -> pygame.Surface:
+    dim = surf.copy()
+    dim.set_alpha(alpha)
+    return dim

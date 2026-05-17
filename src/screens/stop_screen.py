@@ -2,6 +2,7 @@ import pygame
 from src.screens.base_screen import BaseScreen
 from src.ui import Button, FontCache, draw_wrapped_text
 from src.assets import load_image, load_image_fit, stop_placeholder, token_badge, THEME_COLOURS
+from src.animation import TokenCoinEffect
 from src import config as C
 from src.constants import SCREEN_ROUTE
 
@@ -19,8 +20,8 @@ _CAT_COLOURS = {
 }
 
 # Secondary image display size (for Stop 9 treatment diagram)
-_SEC_IMG_W = 380
-_SEC_IMG_H = 180
+_SEC_IMG_W = 560
+_SEC_IMG_H = 300
 
 
 class StopScreen(BaseScreen):
@@ -56,6 +57,7 @@ class StopScreen(BaseScreen):
         self._fade_alpha = 200.0
         self._scroll_y = 0
         self._content_max_scroll = 0
+        self._coin_effect: TokenCoinEffect = None
 
     def set_stop(self, stop):
         self._stop = stop
@@ -101,10 +103,18 @@ class StopScreen(BaseScreen):
         self.game.audio.play("collect")
         self._token_collected = True
         self._collect_btn.visible = False
+        # Spawn coin animation in the center of the screen
+        w, h = C.SCREEN_WIDTH, C.SCREEN_HEIGHT
+        badge = token_badge(self._stop.token, size=80)
+        self._coin_effect = TokenCoinEffect(badge, (w // 2, h // 2), target_size=80)
 
     def update(self, dt: float):
         if self._fade_alpha > 0:
             self._fade_alpha = max(0.0, self._fade_alpha - 220 * dt / 0.35)
+        if self._coin_effect:
+            self._coin_effect.update(dt)
+            if self._coin_effect.done:
+                self._coin_effect = None
 
     def draw(self, surface: pygame.Surface):
         surface.fill(C.BG_COLOUR)
@@ -212,9 +222,6 @@ class StopScreen(BaseScreen):
         section("Key Learning", stop.key_learning, C.TEAL_DARK)
         section("Key Concepts", stop.course_concept)
 
-        if stop.systems_insight:
-            section("Systems Insight", stop.systems_insight, C.RUST)
-
         # Field Note box
         note_lbl = self._font_xs.render("FIELD NOTE", True, C.MID_GREY)
         surface.blit(note_lbl, (pad, y))
@@ -255,8 +262,8 @@ class StopScreen(BaseScreen):
             y += ref_lbl.get_height() + 4
             pygame.draw.line(surface, C.LIGHT_GREY, (pad, y), (w - pad, y))
             y += 4
-            for i, ref in enumerate(stop.references, 1):
-                ref_text = f"[{i}] {ref}"
+            for ref in stop.references:
+                ref_text = ref
                 y = draw_wrapped_text(
                     surface, ref_text, self._font_xs, C.MID_GREY,
                     pad, y, w - pad * 2, line_spacing=2,
@@ -291,6 +298,10 @@ class StopScreen(BaseScreen):
         hint = self._font_xs.render("Esc / B — back  |  Space — collect token",
                                      True, C.LIGHT_GREY)
         surface.blit(hint, (w - hint.get_width() - pad, h - 18))
+
+        # ── Token coin collection animation ───────────────────────────────
+        if self._coin_effect:
+            self._coin_effect.draw(surface)
 
         # ── Fade-in overlay ───────────────────────────────────────────────
         if self._fade_alpha > 0:

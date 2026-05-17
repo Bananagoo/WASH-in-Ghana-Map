@@ -10,9 +10,9 @@ from src.constants import SCREEN_ROUTE, SCREEN_WASH_RESULT
 _HUB_CX   = 594   # centre x of diagram area
 _HUB_CY   = 356   # centre y
 _HUB_R    = 50    # hub circle radius
-_NODE_R   = 190   # distance from hub centre to each dimension node
-_CARD_W   = 120   # dimension card width
-_CARD_H   = 96    # dimension card height
+_NODE_R   = 195   # distance from hub centre to each dimension node
+_CARD_W   = 130   # dimension card width
+_CARD_H   = 104   # dimension card height
 
 HEADER_H  = 65
 BOTTOM_H  = 72
@@ -20,8 +20,8 @@ TRAY_W    = 165
 PAD       = 10
 BADGE_SZ  = 30
 ITEM_H    = 44
-SLOT_W    = 51    # each of the two slots per card
-SLOT_H    = 34
+SLOT_W    = 57    # each of the two slots per card
+SLOT_H    = 36
 
 # angle (deg, clockwise from top) → category
 _CATEGORIES = [
@@ -57,11 +57,19 @@ _TOKEN_REMINDERS = {
 # Slightly lighter background for the diagram area
 _DIAGRAM_BG  = (240, 238, 230)
 _TRAY_BG     = (22,  40,  70)
-_CARD_BG     = (28,  48,  85)
-_SLOT_FILLED = (45,  75, 125)
-_SLOT_EMPTY  = (18,  36,  64)
+_CARD_BG     = (55,  90, 145)
+_SLOT_FILLED = (70, 115, 185)
+_SLOT_EMPTY  = (38,  65, 108)
 _HUB_COL     = (22,  45,  95)
 _LINE_COL    = (160, 165, 175)
+
+_INTRO_LINES = [
+    "You collected 16 tokens from your field survey.",
+    "Drag each token from the left tray into the dimension card where you think it fits best.",
+    "Each dimension has two slots.",
+    "When all 16 tokens are placed, click  Compare My Diagram  to see how your",
+    "arrangement compares to mine. You can drag tokens back out to move them.",
+]
 
 
 def _node_pos(angle_deg):
@@ -90,6 +98,21 @@ class WashMapScreen(BaseScreen):
             self._font_sm,
             colour=C.MID_GREY, hover_colour=C.DARK_GREY,
         )
+        self._help_btn = Button(
+            pygame.Rect(w - 34, (HEADER_H - 4 - 28) // 2, 28, 28),
+            "?",
+            self._font_sm,
+            colour=(95, 155, 215),
+            hover_colour=C.GOLD_LIGHT,
+            text_colour=C.DARK_GREY,
+            border_radius=14,
+        )
+        self._start_btn = Button(
+            pygame.Rect(w // 2 - 110, 0, 220, 40),  # y set in draw
+            "Start Building",
+            self._font_md,
+            colour=C.GOLD, hover_colour=C.RUST, text_colour=C.DARK_GREY,
+        )
 
         self._cards = self._build_cards()
         self._tray_scroll  = 0
@@ -103,6 +126,11 @@ class WashMapScreen(BaseScreen):
             tok: token_badge(tok, size=BADGE_SZ)
             for tok in self.game.state.collected_tokens
         }
+
+        # Show instructions on first entry per session
+        if not hasattr(self, "_intro_shown"):
+            self._intro_shown = False
+        self._show_intro = not self._intro_shown
 
     # ── card geometry ──────────────────────────────────────────────────────────
 
@@ -158,6 +186,20 @@ class WashMapScreen(BaseScreen):
 
     def handle_event(self, event: pygame.event.Event):
         state = self.game.state
+
+        # Intro popup intercepts all events
+        if self._show_intro:
+            if self._start_btn.handle_event(event):
+                self._show_intro = False
+                self._intro_shown = True
+            elif event.type == pygame.KEYDOWN and event.key in (pygame.K_SPACE, pygame.K_RETURN, pygame.K_ESCAPE):
+                self._show_intro = False
+                self._intro_shown = True
+            return
+
+        if self._help_btn.handle_event(event):
+            self._show_intro = True
+            return
 
         if self._back_btn.handle_event(event):
             self.game.audio.play("click")
@@ -255,6 +297,7 @@ class WashMapScreen(BaseScreen):
         placed  = len(state.wash_map_placements)
         count_s = self._font_xs.render(f"{placed} / 16 placed", True, C.GOLD_LIGHT)
         surface.blit(count_s, (PAD, (HEADER_H - 4) // 2 - count_s.get_height() // 2))
+        self._help_btn.draw(surface)
 
         # ── Tray ──────────────────────────────────────────────────────────────
         pygame.draw.line(surface, C.GOLD, (TRAY_W, HEADER_H), (TRAY_W, h - BOTTOM_H), 2)
@@ -323,6 +366,10 @@ class WashMapScreen(BaseScreen):
             surface.blit(hint_s, hint_s.get_rect(center=(w // 2, h - BOTTOM_H + BOTTOM_H // 2)))
         self._back_btn.draw(surface)
 
+        # ── Intro popup ───────────────────────────────────────────────────────
+        if self._show_intro:
+            self._draw_intro(surface)
+
         # ── Drag ghost ────────────────────────────────────────────────────────
         if self._drag_token:
             dx, dy = self._drag_pos
@@ -332,6 +379,42 @@ class WashMapScreen(BaseScreen):
                 surface.blit(badge, (dx - b // 2, dy - b // 2))
                 name_s = self._font_xs.render(self._drag_token, True, C.DARK_GREY)
                 surface.blit(name_s, (dx - name_s.get_width() // 2, dy + b // 2 + 2))
+
+    def _draw_intro(self, surface: pygame.Surface):
+        from src.ui import draw_panel
+        w, h = C.SCREEN_WIDTH, C.SCREEN_HEIGHT
+
+        dim = pygame.Surface((w, h)).convert()
+        dim.fill((8, 18, 38))
+        dim.set_alpha(210)
+        surface.blit(dim, (0, 0))
+
+        pw, ph = 560, 310
+        px = w // 2 - pw // 2
+        py = h // 2 - ph // 2
+        draw_panel(surface, pygame.Rect(px, py, pw, ph),
+                   (22, 45, 95), (95, 155, 215), radius=12)
+
+        ty = py + 18
+        title_s = self._font_md.render("Build Your WASH Systems Diagram", True, C.GOLD)
+        surface.blit(title_s, title_s.get_rect(centerx=w // 2, top=ty))
+        ty += title_s.get_height() + 8
+        pygame.draw.line(surface, (95, 155, 215),
+                         (px + 20, ty), (px + pw - 20, ty), 1)
+        ty += 10
+
+        for line in _INTRO_LINES:
+            ls = self._font_xs.render(line, True, C.OFF_WHITE)
+            surface.blit(ls, ls.get_rect(centerx=w // 2, top=ty))
+            ty += ls.get_height() + 6
+
+        ty += 8
+        self._start_btn.rect.top = ty
+        self._start_btn.draw(surface)
+
+        hint_s = self._font_xs.render("or press  Space / Enter", True, C.MID_GREY)
+        surface.blit(hint_s, hint_s.get_rect(
+            centerx=w // 2, top=ty + self._start_btn.rect.height + 6))
 
     def _draw_card(self, surface, card):
         rect     = card["rect"]
