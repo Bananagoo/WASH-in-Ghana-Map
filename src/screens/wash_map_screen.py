@@ -1,28 +1,73 @@
+import math
 import pygame
 from src.screens.base_screen import BaseScreen
-from src.ui import Button, FontCache
+from src.ui import Button, FontCache, draw_wrapped_text
 from src.assets import token_badge
 from src import config as C
 from src.constants import SCREEN_ROUTE, SCREEN_WASH_RESULT
 
+# Hub geometry
+_HUB_CX   = 594   # centre x of diagram area
+_HUB_CY   = 356   # centre y
+_HUB_R    = 50    # hub circle radius
+_NODE_R   = 190   # distance from hub centre to each dimension node
+_CARD_W   = 120   # dimension card width
+_CARD_H   = 96    # dimension card height
+
+HEADER_H  = 65
+BOTTOM_H  = 72
+TRAY_W    = 165
+PAD       = 10
+BADGE_SZ  = 30
+ITEM_H    = 44
+SLOT_W    = 51    # each of the two slots per card
+SLOT_H    = 34
+
+# angle (deg, clockwise from top) → category
 _CATEGORIES = [
-    ("health",         "Health & Wellbeing",                (200,  70,  70)),
-    ("infrastructure", "Infrastructure & Technology",        (80,  120, 185)),
-    ("governance",     "Governance, Finance & Institutions", (130,  80, 185)),
-    ("culture",        "Culture, History & Place",           (195, 145,  50)),
-    ("gender",         "Gender, Equity & Safety",            (200,  95, 155)),
-    ("climate",        "Climate, Environment & Ecosystems",  (55,  160,  85)),
-    ("livelihoods",    "Livelihoods & Economy",              (165, 120,  55)),
-    ("knowledge",      "Data, Knowledge & Collaboration",    (47,  140, 130)),
+    ("health",         "Health &\nWellbeing",               (200,  70,  70),   0),
+    ("infrastructure", "Infrastructure &\nTechnology",       (80,  120, 185),  45),
+    ("governance",     "Governance,\nFinance &\nInstitutions",(130,  80, 185), 90),
+    ("culture",        "Culture, History\n& Place",          (195, 145,  50), 135),
+    ("gender",         "Gender, Equity\n& Safety",           (200,  95, 155), 180),
+    ("climate",        "Climate, Env. &\nEcosystems",        (55,  160,  85), 225),
+    ("livelihoods",    "Livelihoods &\nEconomy",             (165, 120,  55), 270),
+    ("knowledge",      "Data, Knowledge\n& Collaboration",   (47,  140, 130), 315),
 ]
 
-HEADER_H = 65
-BOTTOM_H = 72
-TRAY_W   = 165
-PAD      = 12
-BADGE_SZ = 36
-SLOT_H   = 50
-ITEM_H   = 46
+_TOKEN_REMINDERS = {
+    "Field Passport":  "The start of the journey and the importance of context.",
+    "Test Strip":      "Invisible water risks revealed through testing.",
+    "Sludge Truck":    "The sanitation chain after a toilet is used.",
+    "Black Star Coin": "National development, public memory, and basic services.",
+    "First Aid Cross": "WASH impacts on health systems and care access.",
+    "Stream Stone":    "Water shaped by authority, land, and spiritual meaning.",
+    "Toilet":          "Sanitation design connected to dignity and safety.",
+    "Histogram":       "Data, monitoring, and accountability in WASH systems.",
+    "Pipe Valve":      "Centralized treatment, skilled workers, and reliable infrastructure.",
+    "Bar of Soap":     "Hygiene education and everyday disease prevention.",
+    "Shell":           "Colonial history, memory, and inherited inequality.",
+    "Fish":            "Food safety, women's livelihoods, and market pressure.",
+    "Bamboo":          "Sacred groves, local knowledge, and environmental protection.",
+    "Canopy Leaf":     "Forests, watersheds, and climate resilience.",
+    "Camera":          "Photo-elicitation, lived experience, and climate risk.",
+    "Cocoa Pod":       "Farming, livelihoods, water, and governance.",
+}
+
+# Slightly lighter background for the diagram area
+_DIAGRAM_BG  = (240, 238, 230)
+_TRAY_BG     = (22,  40,  70)
+_CARD_BG     = (28,  48,  85)
+_SLOT_FILLED = (45,  75, 125)
+_SLOT_EMPTY  = (18,  36,  64)
+_HUB_COL     = (22,  45,  95)
+_LINE_COL    = (160, 165, 175)
+
+
+def _node_pos(angle_deg):
+    θ = math.radians(angle_deg)
+    return (int(_HUB_CX + _NODE_R * math.sin(θ)),
+            int(_HUB_CY - _NODE_R * math.cos(θ)))
 
 
 class WashMapScreen(BaseScreen):
@@ -35,7 +80,7 @@ class WashMapScreen(BaseScreen):
 
         self._compare_btn = Button(
             pygame.Rect(w // 2 - 140, h - BOTTOM_H + 13, 280, 46),
-            "Compare My Map →",
+            "Compare My Diagram →",
             self._font_md,
             colour=C.GOLD, hover_colour=C.RUST, text_colour=C.DARK_GREY,
         )
@@ -47,54 +92,37 @@ class WashMapScreen(BaseScreen):
         )
 
         self._cards = self._build_cards()
-        self._tray_scroll = 0
-        self._tray_clip = pygame.Rect(0, HEADER_H + 22, TRAY_W, h - HEADER_H - BOTTOM_H - 22)
+        self._tray_scroll  = 0
+        self._tray_clip    = pygame.Rect(0, HEADER_H + 22, TRAY_W, h - HEADER_H - BOTTOM_H - 22)
 
         self._drag_token: str = None
-        self._drag_pos   = (0, 0)
+        self._drag_pos = (0, 0)
+        self._hover_token: str = None
 
         self._badges = {
             tok: token_badge(tok, size=BADGE_SZ)
             for tok in self.game.state.collected_tokens
         }
 
+    # ── card geometry ──────────────────────────────────────────────────────────
+
     def _build_cards(self):
-        w, h   = C.SCREEN_WIDTH, C.SCREEN_HEIGHT
-        cx0    = TRAY_W + PAD
-        cy0    = HEADER_H + PAD
-        area_w = w - cx0 - PAD
-        area_h = h - HEADER_H - BOTTOM_H - PAD * 2
-
-        col_gap = 10
-        row_gap = 8
-        card_w  = (area_w - col_gap) // 2
-        card_h  = (area_h - 3 * row_gap) // 4
-
-        label_h = self._font_xs.get_height()
-        slot_lpad  = 14
-        slot_rpad  = 8
-        slot_avail = card_w - slot_lpad - slot_rpad
-        slot_gap   = 8
-        slot_w     = (slot_avail - slot_gap) // 2
-        slot_y_off = 8 + label_h + 6   # from card top
-
         cards = []
-        for i, (cat_id, cat_name, colour) in enumerate(_CATEGORIES):
-            col = i % 2
-            row = i // 2
-            rx  = cx0 + col * (card_w + col_gap)
-            ry  = cy0 + row * (card_h + row_gap)
-            card_rect = pygame.Rect(rx, ry, card_w, card_h)
-            slot_y    = ry + slot_y_off
+        for cat_id, cat_name, colour, angle_deg in _CATEGORIES:
+            nx, ny   = _node_pos(angle_deg)
+            card_rect = pygame.Rect(nx - _CARD_W // 2, ny - _CARD_H // 2, _CARD_W, _CARD_H)
+            # Two slots side-by-side at bottom of card
+            slot_y = card_rect.top + _CARD_H - SLOT_H - 5
             slots = [
-                pygame.Rect(rx + slot_lpad, slot_y, slot_w, SLOT_H),
-                pygame.Rect(rx + slot_lpad + slot_w + slot_gap, slot_y, slot_w, SLOT_H),
+                pygame.Rect(card_rect.left + 5,           slot_y, SLOT_W, SLOT_H),
+                pygame.Rect(card_rect.left + 5 + SLOT_W + 5, slot_y, SLOT_W, SLOT_H),
             ]
             cards.append({
                 "cat_id":   cat_id,
                 "cat_name": cat_name,
                 "colour":   colour,
                 "rect":     card_rect,
+                "node":     (nx, ny),
                 "slots":    slots,
             })
         return cards
@@ -150,15 +178,35 @@ class WashMapScreen(BaseScreen):
                 ))
             return
 
+        if event.type == pygame.MOUSEMOTION:
+            if self._drag_token:
+                self._drag_pos = event.pos
+            else:
+                # Hover detection for tooltips
+                pos = event.pos
+                hover = None
+                for tok, r in self._tray_item_rects().items():
+                    if r.collidepoint(pos):
+                        hover = tok
+                        break
+                if not hover:
+                    for card in self._cards:
+                        tokens = self._tokens_in_cat(card["cat_id"])
+                        for i, slot in enumerate(card["slots"]):
+                            if slot.collidepoint(pos) and i < len(tokens):
+                                hover = tokens[i]
+                                break
+                self._hover_token = hover
+            return
+
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             pos = event.pos
-            # Pick up from tray
             for tok, r in self._tray_item_rects().items():
                 if r.collidepoint(pos):
                     self._drag_token = tok
                     self._drag_pos   = pos
+                    self._hover_token = None
                     return
-            # Pick up from a filled slot
             for card in self._cards:
                 tokens = self._tokens_in_cat(card["cat_id"])
                 for i, slot in enumerate(card["slots"]):
@@ -167,24 +215,19 @@ class WashMapScreen(BaseScreen):
                         del state.wash_map_placements[tok]
                         self._drag_token = tok
                         self._drag_pos   = pos
+                        self._hover_token = None
                         return
-
-        if event.type == pygame.MOUSEMOTION and self._drag_token:
-            self._drag_pos = event.pos
 
         if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             if not self._drag_token:
                 return
             pos = event.pos
-            # Try to drop on a card with a free slot
             for card in self._cards:
                 if card["rect"].collidepoint(pos):
                     tokens = self._tokens_in_cat(card["cat_id"])
                     if len(tokens) < 2:
                         state.wash_map_placements[self._drag_token] = card["cat_id"]
-                    # If card is full, token returns to tray (not placed)
                     break
-            # Otherwise token silently returns to tray (wash_map_placements unchanged)
             self._drag_token = None
 
         if event.type == pygame.KEYDOWN:
@@ -197,27 +240,27 @@ class WashMapScreen(BaseScreen):
     # ── draw ──────────────────────────────────────────────────────────────────
 
     def draw(self, surface: pygame.Surface):
-        surface.fill(C.BG_COLOUR)
         w, h  = C.SCREEN_WIDTH, C.SCREEN_HEIGHT
         state = self.game.state
 
-        # Header
+        # Background: lighter cream for diagram area, dark for tray
+        surface.fill(_DIAGRAM_BG)
+        pygame.draw.rect(surface, _TRAY_BG, pygame.Rect(0, HEADER_H, TRAY_W, h - HEADER_H - BOTTOM_H))
+
+        # ── Header ────────────────────────────────────────────────────────────
         pygame.draw.rect(surface, C.TEAL_DARK, pygame.Rect(0, 0, w, HEADER_H - 4))
         pygame.draw.rect(surface, C.GOLD,      pygame.Rect(0, HEADER_H - 4, w, 4))
-        title_s = self._font_md.render("Build the WASH Systems Map", True, C.WHITE)
+        title_s = self._font_md.render("Build the WASH Systems Diagram", True, C.WHITE)
         surface.blit(title_s, title_s.get_rect(centerx=w // 2, centery=(HEADER_H - 4) // 2))
-        placed = len(state.wash_map_placements)
+        placed  = len(state.wash_map_placements)
         count_s = self._font_xs.render(f"{placed} / 16 placed", True, C.GOLD_LIGHT)
         surface.blit(count_s, (PAD, (HEADER_H - 4) // 2 - count_s.get_height() // 2))
 
-        # Tray panel
-        tray_bg = pygame.Rect(0, HEADER_H, TRAY_W, h - HEADER_H - BOTTOM_H)
-        pygame.draw.rect(surface, (22, 40, 70), tray_bg)
+        # ── Tray ──────────────────────────────────────────────────────────────
         pygame.draw.line(surface, C.GOLD, (TRAY_W, HEADER_H), (TRAY_W, h - BOTTOM_H), 2)
         lbl_s = self._font_xs.render("TOKENS", True, C.GOLD_LIGHT)
         surface.blit(lbl_s, (PAD, HEADER_H + 6))
 
-        # Tray items (clipped)
         surface.set_clip(self._tray_clip)
         for tok, r in self._tray_item_rects().items():
             if tok == self._drag_token:
@@ -228,34 +271,66 @@ class WashMapScreen(BaseScreen):
             if badge:
                 surface.blit(badge, (r.left + 4, r.centery - BADGE_SZ // 2))
             name_s = self._font_xs.render(tok, True, C.OFF_WHITE)
-            nx = r.left + BADGE_SZ + 8
-            if name_s.get_width() > TRAY_W - BADGE_SZ - 18:
-                name_s = self._font_xs.render(tok[:10] + "…", True, C.OFF_WHITE)
-            surface.blit(name_s, name_s.get_rect(midleft=(nx, r.centery)))
+            nx_ = r.left + BADGE_SZ + 8
+            avail = TRAY_W - BADGE_SZ - 18
+            if name_s.get_width() > avail:
+                t = tok
+                while t and self._font_xs.size(t + "…")[0] > avail:
+                    t = t[:-1]
+                name_s = self._font_xs.render(t + "…", True, C.OFF_WHITE)
+            surface.blit(name_s, name_s.get_rect(midleft=(nx_, r.centery)))
         surface.set_clip(None)
+
+        # ── Hub-and-spoke diagram ──────────────────────────────────────────────
+        # Connecting lines (drawn first, behind everything)
+        for card in self._cards:
+            nx, ny = card["node"]
+            pygame.draw.line(surface, _LINE_COL, (_HUB_CX, _HUB_CY), (nx, ny), 2)
 
         # Dimension cards
         for card in self._cards:
             self._draw_card(surface, card)
 
-        # Bottom bar
+        # Hub centre circle
+        pygame.draw.circle(surface, _HUB_COL, (_HUB_CX, _HUB_CY), _HUB_R)
+        pygame.draw.circle(surface, C.GOLD, (_HUB_CX, _HUB_CY), _HUB_R, 2)
+        hub1 = self._font_xs.render("WASH", True, C.GOLD_LIGHT)
+        hub2 = self._font_xs.render("in Ghana", True, C.GOLD_LIGHT)
+        surface.blit(hub1, hub1.get_rect(centerx=_HUB_CX, centery=_HUB_CY - 8))
+        surface.blit(hub2, hub2.get_rect(centerx=_HUB_CX, centery=_HUB_CY + 8))
+
+        # ── Tooltip (hover) ───────────────────────────────────────────────────
+        if self._hover_token and _TOKEN_REMINDERS.get(self._hover_token):
+            reminder  = _TOKEN_REMINDERS[self._hover_token]
+            tip_rect  = pygame.Rect(TRAY_W + 8, h - BOTTOM_H - 50, w - TRAY_W - 16, 46)
+            pygame.draw.rect(surface, (20, 38, 68), tip_rect, border_radius=6)
+            pygame.draw.rect(surface, C.GOLD, tip_rect, 1, border_radius=6)
+            name_s = self._font_xs.render(f"{self._hover_token}: ", True, C.GOLD_LIGHT)
+            surface.blit(name_s, (tip_rect.left + 8, tip_rect.top + 6))
+            draw_wrapped_text(
+                surface, reminder, self._font_xs, C.OFF_WHITE,
+                tip_rect.left + 8, tip_rect.top + 6 + name_s.get_height() + 2,
+                tip_rect.width - 16, line_spacing=2,
+            )
+
+        # ── Bottom bar ────────────────────────────────────────────────────────
         pygame.draw.line(surface, C.LIGHT_GREY, (0, h - BOTTOM_H), (w, h - BOTTOM_H), 1)
         if self._all_placed():
             self._compare_btn.draw(surface)
         else:
             hint_s = self._font_xs.render(
-                "Place all 16 tokens to compare your map.", True, C.MID_GREY)
+                "Place all 16 tokens to compare your diagram.", True, C.MID_GREY)
             surface.blit(hint_s, hint_s.get_rect(center=(w // 2, h - BOTTOM_H + BOTTOM_H // 2)))
         self._back_btn.draw(surface)
 
-        # Drag ghost
+        # ── Drag ghost ────────────────────────────────────────────────────────
         if self._drag_token:
             dx, dy = self._drag_pos
-            badge = self._badges.get(self._drag_token)
+            badge  = self._badges.get(self._drag_token)
             if badge:
                 b = BADGE_SZ
                 surface.blit(badge, (dx - b // 2, dy - b // 2))
-                name_s = self._font_xs.render(self._drag_token, True, C.WHITE)
+                name_s = self._font_xs.render(self._drag_token, True, C.DARK_GREY)
                 surface.blit(name_s, (dx - name_s.get_width() // 2, dy + b // 2 + 2))
 
     def _draw_card(self, surface, card):
@@ -264,46 +339,38 @@ class WashMapScreen(BaseScreen):
         cat_id   = card["cat_id"]
         cat_name = card["cat_name"]
 
-        pygame.draw.rect(surface, (28, 48, 85), rect, border_radius=8)
+        # Card background
+        pygame.draw.rect(surface, _CARD_BG, rect, border_radius=8)
         pygame.draw.rect(surface, colour, rect, 1, border_radius=8)
 
-        # Left colour bar
-        bar = pygame.Rect(rect.left + 2, rect.top + 2, 5, rect.height - 4)
-        pygame.draw.rect(surface, colour, bar, border_radius=4)
+        # Left colour accent strip
+        strip = pygame.Rect(rect.left + 2, rect.top + 2, 5, rect.height - 4)
+        pygame.draw.rect(surface, colour, strip, border_radius=3)
 
-        # Category name (truncated if needed)
-        name_surf = self._font_xs.render(cat_name, True, colour)
-        max_name_w = rect.width - 20
-        if name_surf.get_width() > max_name_w:
-            while cat_name and self._font_xs.size(cat_name + "…")[0] > max_name_w:
-                cat_name = cat_name[:-1]
-            name_surf = self._font_xs.render(cat_name + "…", True, colour)
-        surface.blit(name_surf, (rect.left + 14, rect.top + 8))
+        # Category name (multi-line, split on \n)
+        lines = cat_name.split("\n")
+        ty = rect.top + 7
+        for line in lines[:3]:
+            ls = self._font_xs.render(line, True, colour)
+            surface.blit(ls, (rect.left + 12, ty))
+            ty += self._font_xs.get_height() + 2
 
-        # Slots
+        # Token slots
         tokens = self._tokens_in_cat(cat_id)
         for i, slot in enumerate(card["slots"]):
-            tok    = tokens[i] if i < len(tokens) else None
+            tok = tokens[i] if i < len(tokens) else None
             is_dragging = tok and tok == self._drag_token
 
             if tok and not is_dragging:
-                pygame.draw.rect(surface, (45, 80, 130), slot, border_radius=6)
-                pygame.draw.rect(surface, colour, slot, 1, border_radius=6)
+                pygame.draw.rect(surface, _SLOT_FILLED, slot, border_radius=5)
+                pygame.draw.rect(surface, colour, slot, 1, border_radius=5)
                 badge = self._badges.get(tok)
                 if badge:
-                    surface.blit(badge, (slot.left + 4, slot.centery - BADGE_SZ // 2))
-                avail_w = slot.width - BADGE_SZ - 14
-                name_s  = self._font_xs.render(tok, True, C.OFF_WHITE)
-                if name_s.get_width() > avail_w:
-                    short = tok
-                    while short and self._font_xs.size(short + "…")[0] > avail_w:
-                        short = short[:-1]
-                    name_s = self._font_xs.render(short + "…", True, C.OFF_WHITE)
-                surface.blit(name_s, name_s.get_rect(
-                    midleft=(slot.left + BADGE_SZ + 8, slot.centery)))
+                    bs = min(slot.width - 4, slot.height - 4, 26)
+                    scaled = pygame.transform.smoothscale(badge, (bs, bs))
+                    surface.blit(scaled, scaled.get_rect(center=slot.center))
             else:
-                # Empty or mid-drag — show droppable target
-                pygame.draw.rect(surface, (15, 30, 55), slot, border_radius=6)
-                pygame.draw.rect(surface, (60, 90, 120), slot, 1, border_radius=6)
-                hint = self._font_xs.render("drop here", True, (60, 90, 120))
-                surface.blit(hint, hint.get_rect(center=slot.center))
+                pygame.draw.rect(surface, _SLOT_EMPTY, slot, border_radius=5)
+                pygame.draw.rect(surface, (55, 85, 115), slot, 1, border_radius=5)
+                plus = self._font_xs.render("+", True, (55, 85, 115))
+                surface.blit(plus, plus.get_rect(center=slot.center))

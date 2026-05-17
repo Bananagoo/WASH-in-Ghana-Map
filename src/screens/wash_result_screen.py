@@ -13,14 +13,14 @@ _BADGE_SZ = 32
 
 _TAKEAWAY = [
     (
-        "Your map may not match mine exactly, and that is part of the point. "
+        "Your diagram may not match mine exactly, and that is part of the point. "
         "Each token came from one field moment, but most tokens connect to more "
         "than one part of the WASH system. WASH in Ghana is shaped by health, "
         "infrastructure, governance, culture, gender, climate, livelihoods, and "
         "knowledge at the same time."
     ),
     (
-        "The final map shows that improving WASH systems cannot start and end "
+        "The final diagram shows that improving WASH systems cannot start and end "
         "with building more infrastructure. Lasting change also needs education, "
         "support, and mobilization. Communities need knowledge they can understand, "
         "question, and use. Local leaders, students, health workers, engineers, "
@@ -136,7 +136,7 @@ class WashResultScreen(BaseScreen):
         # ── Header ────────────────────────────────────────────────────────
         pygame.draw.rect(surface, C.TEAL_DARK, pygame.Rect(0, 0, w, _HEADER_H - 4))
         pygame.draw.rect(surface, C.GOLD,      pygame.Rect(0, _HEADER_H - 4, w, 4))
-        title_s = self._font_md.render("WASH Systems Map — Results", True, C.WHITE)
+        title_s = self._font_md.render("WASH Systems Diagram — Results", True, C.WHITE)
         surface.blit(title_s, title_s.get_rect(centerx=w // 2, centery=(_HEADER_H - 4) // 2))
 
         # ── Score banner (full width) ──────────────────────────────────────
@@ -148,7 +148,7 @@ class WashResultScreen(BaseScreen):
                          (0, score_y0 + SCORE_H - 1), (w, score_y0 + SCORE_H - 1))
 
         score_s = self._font_lg.render(
-            f"Your map is  {score} / 16  similar to mine.", True, C.TEAL_DARK)
+            f"Your diagram is  {score} / 16  similar to mine.", True, C.TEAL_DARK)
         surface.blit(score_s, score_s.get_rect(
             centerx=w // 2, centery=score_y0 + SCORE_H // 2))
 

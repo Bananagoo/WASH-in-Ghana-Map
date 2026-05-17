@@ -12,10 +12,10 @@ MID_GREY    = (140, 140, 140)
 LIGHT_GREY  = (210, 210, 210)
 CREAM       = (252, 248, 238)
 
-# Brand colours — warm earthy palette
-TEAL        = (47,  140, 130)
-TEAL_DARK   = (30,   95,  88)
-TEAL_LIGHT  = (180, 225, 220)
+# Brand colours — deep navy/blue palette
+TEAL        = (45,  90,  170)
+TEAL_DARK   = (22,  45,   95)
+TEAL_LIGHT  = (180, 210, 245)
 GOLD        = (210, 165,  50)
 GOLD_LIGHT  = (245, 220, 140)
 RUST        = (190,  80,  50)

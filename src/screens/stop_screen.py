@@ -1,7 +1,7 @@
 import pygame
 from src.screens.base_screen import BaseScreen
 from src.ui import Button, FontCache, draw_wrapped_text
-from src.assets import load_image, stop_placeholder, token_badge, THEME_COLOURS
+from src.assets import load_image, load_image_fit, stop_placeholder, token_badge, THEME_COLOURS
 from src import config as C
 from src.constants import SCREEN_ROUTE
 
@@ -63,9 +63,9 @@ class StopScreen(BaseScreen):
         self._token_collected = state.is_stop_completed(stop.id)
         self._collect_btn.visible = not self._token_collected
 
-        self._stop_image = load_image(stop.image, (self.IMG_W, self.IMG_H)) if stop.image else None
+        self._stop_image = load_image_fit(stop.image, self.IMG_W, self.IMG_H) if stop.image else None
         self._secondary_image = (
-            load_image(stop.secondary_image, (_SEC_IMG_W, _SEC_IMG_H))
+            load_image_fit(stop.secondary_image, _SEC_IMG_W, _SEC_IMG_H)
             if stop.secondary_image else None
         )
         self._token_badge = (load_image(stop.token_image, (36, 36))
@@ -130,8 +130,11 @@ class StopScreen(BaseScreen):
         img_rect = pygame.Rect(img_x, img_y, self.IMG_W, self.IMG_H)
 
         if self._stop_image:
-            surface.blit(self._stop_image, img_rect)
-            pygame.draw.rect(surface, C.GOLD, img_rect, width=2, border_radius=4)
+            iw, ih = self._stop_image.get_size()
+            ix = img_x + (self.IMG_W - iw) // 2
+            fitted_rect = pygame.Rect(ix, img_y, iw, ih)
+            surface.blit(self._stop_image, (ix, img_y))
+            pygame.draw.rect(surface, C.GOLD, fitted_rect, width=2, border_radius=4)
         else:
             ph = stop_placeholder(self.IMG_W, self.IMG_H,
                                    stop.icon_label, stop.visual_theme, self._font_lg)
@@ -207,7 +210,7 @@ class StopScreen(BaseScreen):
             y += C.PAD_SM
 
         section("Key Learning", stop.key_learning, C.TEAL_DARK)
-        section("Course Concept", stop.course_concept)
+        section("Key Concepts", stop.course_concept)
 
         if stop.systems_insight:
             section("Systems Insight", stop.systems_insight, C.RUST)
@@ -234,25 +237,31 @@ class StopScreen(BaseScreen):
             sec_lbl = self._font_xs.render("TREATMENT PROCESS", True, C.MID_GREY)
             surface.blit(sec_lbl, (pad, y))
             y += sec_lbl.get_height() + 4
-            surface.blit(self._secondary_image, (pad, y))
-            pygame.draw.rect(surface, C.TEAL, pygame.Rect(pad, y, _SEC_IMG_W, _SEC_IMG_H), 2, border_radius=4)
-            y += _SEC_IMG_H + C.PAD_SM
+            siw, sih = self._secondary_image.get_size()
+            six = pad + (_SEC_IMG_W - siw) // 2
+            surface.blit(self._secondary_image, (six, y))
+            pygame.draw.rect(surface, C.TEAL, pygame.Rect(six, y, siw, sih), 2, border_radius=4)
+            y += sih + C.PAD_SM
             desc = ("Intake and pumping → Coagulation (alum) → Flocculation → "
                     "Filtration → Chlorination → Quality assessment before distribution.")
             y = draw_wrapped_text(surface, desc, self._font_xs, C.MID_GREY,
                                   pad, y, w - pad * 2, line_spacing=3)
             y += C.PAD_SM
 
-        # Reading tie
-        if stop.reading_tie:
-            rt_lbl = self._font_xs.render("READING TIE  ", True, C.MID_GREY)
-            surface.blit(rt_lbl, (pad, y))
-            y = draw_wrapped_text(
-                surface, stop.reading_tie, self._font_xs, C.MID_GREY,
-                pad + rt_lbl.get_width(), y,
-                w - pad * 2 - rt_lbl.get_width(),
-                line_spacing=3,
-            )
+        # References
+        if stop.references:
+            ref_lbl = self._font_xs.render("REFERENCES", True, C.MID_GREY)
+            surface.blit(ref_lbl, (pad, y))
+            y += ref_lbl.get_height() + 4
+            pygame.draw.line(surface, C.LIGHT_GREY, (pad, y), (w - pad, y))
+            y += 4
+            for i, ref in enumerate(stop.references, 1):
+                ref_text = f"[{i}] {ref}"
+                y = draw_wrapped_text(
+                    surface, ref_text, self._font_xs, C.MID_GREY,
+                    pad, y, w - pad * 2, line_spacing=2,
+                )
+                y += 3
 
         y += C.PAD
         self._content_max_scroll = max(0, y + self._scroll_y - content_bottom)

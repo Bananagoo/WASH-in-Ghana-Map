@@ -31,6 +31,7 @@ class Stop:
     reading_tie: str = ""
     what_happened: str = ""
     systems_insight: str = ""
+    references: List[str] = field(default_factory=list)
 
 
 @dataclass

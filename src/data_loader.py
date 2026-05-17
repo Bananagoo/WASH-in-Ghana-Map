@@ -38,6 +38,7 @@ def load_stops() -> List[Stop]:
             reading_tie=s.get("reading_tie", ""),
             what_happened=s.get("what_happened", ""),
             systems_insight=s.get("systems_insight", ""),
+            references=s.get("references", []),
         ))
     return stops
 

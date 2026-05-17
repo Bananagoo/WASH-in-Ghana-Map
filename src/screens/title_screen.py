@@ -1,7 +1,7 @@
 import pygame
 from src.screens.base_screen import BaseScreen
 from src.ui import Button, draw_wrapped_text, FontCache, draw_panel
-from src.assets import load_image
+from src.assets import load_image_fit
 from src import config as C
 from src.constants import SCREEN_ROUTE
 
@@ -51,7 +51,7 @@ class TitleScreen(BaseScreen):
         self._subtitle = txt.subtitle
         self._course   = txt.course
 
-        self._front_image = load_image("photos/frontimage.jpg", (_FRONT_IMG_W, _FRONT_IMG_H))
+        self._front_image = load_image_fit("photos/frontimage.jpg", _FRONT_IMG_W, _FRONT_IMG_H)
 
     def handle_event(self, event: pygame.event.Event):
         if self._start_btn.handle_event(event):
@@ -108,9 +108,12 @@ class TitleScreen(BaseScreen):
         img_x = panel_rect.right - _FRONT_IMG_W - img_margin
         img_y = rule_y + 8
         if self._front_image:
-            surface.blit(self._front_image, (img_x, img_y))
+            fw, fh = self._front_image.get_size()
+            fix = img_x + (_FRONT_IMG_W - fw) // 2
+            fiy = img_y
+            surface.blit(self._front_image, (fix, fiy))
             pygame.draw.rect(surface, _PANEL_BDR,
-                             pygame.Rect(img_x, img_y, _FRONT_IMG_W, _FRONT_IMG_H), 2, border_radius=4)
+                             pygame.Rect(fix, fiy, fw, fh), 2, border_radius=4)
             text_max_w = panel_w - C.PAD_LG * 2 - _FRONT_IMG_W - img_margin
         else:
             text_max_w = panel_w - C.PAD_LG * 2
