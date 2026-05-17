@@ -238,11 +238,23 @@ class StopScreen(BaseScreen):
         y += note_lbl.get_height() + 4
 
         inner_w   = w - cpd * 2 - C.PAD * 2
-        note_lines = _wrap(stop.reflection, self._font_sm, inner_w)
 
-        # Measure field note box height (reflection text + optional diagram)
-        text_block_h = len(note_lines) * (self._font_sm.get_height() + 4)
+        # Split reflection on [DIAGRAM] marker so the image can appear mid-text
+        _DIAG_MARKER = "[DIAGRAM]"
+        _reflection = stop.reflection
+        if _DIAG_MARKER in _reflection and self._secondary_image:
+            _parts = _reflection.split(_DIAG_MARKER, 1)
+            note_lines_a = _wrap(_parts[0].strip(), self._font_sm, inner_w)
+            note_lines_b = _wrap(_parts[1].strip(), self._font_sm, inner_w)
+        else:
+            note_lines_a = _wrap(_reflection, self._font_sm, inner_w)
+            note_lines_b = []
+
+        # Measure field note box height
+        line_h = self._font_sm.get_height() + 4
+        text_block_h = (len(note_lines_a) + len(note_lines_b)) * line_h
         diagram_block_h = 0
+        cap_lines = []
         if self._secondary_image:
             siw, sih = self._secondary_image.get_size()
             sec_cap_text = stop.secondary_image_caption or ""
@@ -256,12 +268,12 @@ class StopScreen(BaseScreen):
         pygame.draw.rect(surface, C.GOLD, note_rect, width=2, border_radius=6)
 
         ny = y + C.PAD
-        for line in note_lines:
+        for line in note_lines_a:
             ls = self._font_sm.render(line, True, C.DARK_GREY)
             surface.blit(ls, (cpd + C.PAD, ny))
-            ny += self._font_sm.get_height() + 4
+            ny += line_h
 
-        # Treatment diagram inside the field note box
+        # Diagram inserted between the two text blocks (or after all text if no split)
         if self._secondary_image:
             ny += C.PAD_SM
             siw, sih = self._secondary_image.get_size()
@@ -273,6 +285,12 @@ class StopScreen(BaseScreen):
                 cs = self._font_xs.render(line, True, C.MID_GREY)
                 surface.blit(cs, cs.get_rect(centerx=note_rect.centerx, top=ny))
                 ny += self._font_xs.get_height() + 3
+            ny += C.PAD_SM
+
+        for line in note_lines_b:
+            ls = self._font_sm.render(line, True, C.DARK_GREY)
+            surface.blit(ls, (cpd + C.PAD, ny))
+            ny += line_h
 
         y = note_rect.bottom + C.PAD_SM
 
