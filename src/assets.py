@@ -84,14 +84,45 @@ def stop_placeholder(w: int, h: int, icon_label: str, visual_theme: str,
     return surf
 
 
+# Colour and short symbol per token name — expands the badge beyond a single letter
+_TOKEN_STYLES: dict = {
+    "Field Passport":  ((60,  100, 180), "PP"),
+    "Test Strip":      ((47,  140, 130), "TS"),
+    "Sludge Truck":    ((100, 110, 130), "ST"),
+    "Black Star Coin": ((200, 165,  50), "★"),   # ★
+    "First Aid Cross": ((200,  70,  70), "✚"),   # ✚
+    "Stream Stone":    ((120, 160, 140), "SS"),
+    "Toilet":          ((80,  130, 200), "TO"),
+    "Histogram Icon":  ((80,  160, 200), "█▆▄"),
+    "Pipe Valve":      ((130,  80, 185), "PV"),
+    "Bar of Soap":     ((47,  140, 130), "SP"),
+    "Shell":           ((195, 145,  50), "○"),   # ○
+    "Fish":            ((60,  170, 120), "><>"),
+    "Bamboo":          ((60,  150,  80), "||"),
+    "Canopy Leaf":     ((55,  160,  85), "♥"),   # ♥ stand-in for leaf
+    "Camera":          ((80,  160, 200), "[■]"),
+    "Cocoa Pod":       ((165, 120,  55), "CP"),
+}
+
+
 def token_badge(token_name: str, size: int = 40,
                 bg_colour: Tuple[int, int, int] = (200, 160, 50)) -> pygame.Surface:
-    """Circular badge with first letter — used as a token icon."""
+    """Circular badge with a short symbol — used as a collectible token icon."""
+    style = _TOKEN_STYLES.get(token_name)
+    colour = style[0] if style else bg_colour
+    label  = style[1] if style else (token_name[:2].upper() if token_name else "?")
+
     surf = pygame.Surface((size, size), pygame.SRCALPHA)
     cx, cy, r = size // 2, size // 2, size // 2 - 1
-    pygame.draw.circle(surf, bg_colour, (cx, cy), r)
+
+    # Outer ring (slightly lighter)
+    light = tuple(min(255, c + 50) for c in colour)
+    pygame.draw.circle(surf, light, (cx, cy), r)
+    pygame.draw.circle(surf, colour, (cx, cy), r - 3)
     pygame.draw.circle(surf, (255, 255, 255), (cx, cy), r, width=2)
-    font = pygame.font.SysFont("Arial", max(size // 3, 8), bold=True)
-    letter = font.render(token_name[0].upper(), True, (255, 255, 255))
-    surf.blit(letter, letter.get_rect(center=(cx, cy)))
+
+    font_size = max(size // 4, 7) if len(label) > 2 else max(size // 3, 8)
+    font = pygame.font.SysFont("Arial", font_size, bold=True)
+    text_surf = font.render(label, True, (255, 255, 255))
+    surf.blit(text_surf, text_surf.get_rect(center=(cx, cy)))
     return surf

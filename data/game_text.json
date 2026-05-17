@@ -4,11 +4,11 @@
   "course": "SYDE 599 — Systems Studies in Water, Environment, and Health",
 
   "tutorial": [
-    "Before this course, I understood WASH mostly through infrastructure: filters, pipes, toilets, treatment plants, and water quality tools.",
-    "This game follows my field course in Ghana — 16 stops, 16 tokens, one connected system.",
-    "At each stop, you will read a field note and collect a token. Once all tokens are collected, you will map them to system categories.",
-    "Your goal: understand that WASH is not only about infrastructure. It is shaped by health, governance, culture, gender, climate, livelihoods, and knowledge.",
-    "Press SPACE or click START to begin your journey."
+    "Welcome to Mapping WASH, an interactive field-journal game based on SYDE 599: Systems Studies in Water, Environment, and Health. This course explores water, sanitation, and hygiene (WASH) through field visits, lectures, readings, community conversations, and personal reflection.",
+    "In this journey, WASH is not treated as only pipes, pumps, toilets, or treatment plants. Those physical pieces matter, but they are only the hardware of the system. Just as important is the software: governance, financing, education, culture, trust, maintenance, behaviour change, and community ownership.",
+    "Each location on the route shows how WASH connects technical systems with health, politics, history, gender, climate, livelihoods, and lived experience.",
+    "Walk along the route and visit each unlocked stop in order. At each stop, read the field journal card, look for the systems lenses, and collect the token before moving to the next location.",
+    "At the end, use the tokens to build a WASH systems map. This is a learning journey through the places, people, and ideas that changed how I understand WASH: from a technical service to a complex system shaped by infrastructure, institutions, culture, health, environment, and everyday life. Press Space or click Begin to start."
   ],
 
   "route_instructions": "Click the highlighted stop to open your field note. Collect the token to unlock the next stop.",
@@ -36,13 +36,12 @@
 
   "final_title": "A System, Not a Sector",
   "final_takeaway": [
-    "Sustainable WASH work cannot be designed from one lens alone.",
-    "It requires technical knowledge, community trust, cultural understanding, long-term financing, attention to gendered burdens, and awareness of the social and environmental systems around water.",
-    "Each stop on this route added one lens.",
+    "This is not a complete map of Ghana's WASH system. It is a learning journey through the places, people, and ideas that changed how I understand WASH.",
+    "Sustainable WASH work cannot be designed from one lens alone. It requires technical knowledge, community trust, cultural understanding, long-term financing, attention to gendered burdens, and awareness of the social and environmental systems around water.",
     "Water quality connected to health. Sanitation connected to governance. Clinics connected to infrastructure and inequity. Gender and WASH connected to labour, dignity, and safety. Climate and livelihoods connected water to agriculture, flooding, forests, and economic survival.",
     "No single token captures the whole system. That is the point."
   ],
-  "final_credit": "SYDE 599 Knowledge Mobilization — Katherine Langille, 2025",
+  "final_credit": "SYDE 599 Knowledge Mobilization — Katherine Langille, 2026",
   "final_restart_button": "Play Again",
 
   "feedback_messages": {

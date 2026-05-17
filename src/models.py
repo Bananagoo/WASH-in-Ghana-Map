@@ -24,8 +24,10 @@ class Stop:
     route_position: RoutePosition
     # Optional enrichment fields (safe to leave out of JSON)
     image: str = ""
+    secondary_image: str = ""
     token_image: str = ""
     visual_theme: str = "default"
+    wash_focus: str = ""
     reading_tie: str = ""
     what_happened: str = ""
     systems_insight: str = ""

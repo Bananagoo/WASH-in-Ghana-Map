@@ -6,17 +6,21 @@ from src import config as C
 from src.constants import SCREEN_ROUTE
 
 
-# Category name → colour (for pill tags)
+# Category name → colour (for pill tags) — matches updated categories.json names
 _CAT_COLOURS = {
-    "Health":                 (200,  70,  70),
-    "Infrastructure":         (80,  120, 185),
-    "Governance":             (130,  80, 185),
-    "Culture":                (195, 145,  50),
-    "Gender":                 (200,  95, 155),
-    "Climate":                (55,  160,  85),
-    "Livelihoods":            (165, 120,  55),
-    "Knowledge / Collaboration": (47, 140, 130),
+    "Health & Wellbeing":                (200,  70,  70),
+    "Infrastructure & Technology":        (80,  120, 185),
+    "Governance, Finance & Institutions": (130,  80, 185),
+    "Culture, History & Place":           (195, 145,  50),
+    "Gender, Equity & Safety":            (200,  95, 155),
+    "Climate, Environment & Ecosystems":  (55,  160,  85),
+    "Livelihoods & Economy":              (165, 120,  55),
+    "Data, Knowledge & Collaboration":    (47,  140, 130),
 }
+
+# Secondary image display size (for Stop 9 treatment diagram)
+_SEC_IMG_W = 380
+_SEC_IMG_H = 180
 
 
 class StopScreen(BaseScreen):
@@ -43,14 +47,15 @@ class StopScreen(BaseScreen):
             colour=C.MID_GREY, hover_colour=C.DARK_GREY,
         )
 
-        # Stop data — set externally via set_stop() after on_enter
         self._stop = None
         self._token_collected = False
         self._stop_image: pygame.Surface = None
+        self._secondary_image: pygame.Surface = None
         self._token_badge: pygame.Surface = None
 
-        # Fade-in overlay: starts opaque, drains to 0
         self._fade_alpha = 200.0
+        self._scroll_y = 0
+        self._content_max_scroll = 0
 
     def set_stop(self, stop):
         self._stop = stop
@@ -58,12 +63,16 @@ class StopScreen(BaseScreen):
         self._token_collected = state.is_stop_completed(stop.id)
         self._collect_btn.visible = not self._token_collected
 
-        # Load images (fallback to None → placeholder drawn inline)
         self._stop_image = load_image(stop.image, (self.IMG_W, self.IMG_H)) if stop.image else None
+        self._secondary_image = (
+            load_image(stop.secondary_image, (_SEC_IMG_W, _SEC_IMG_H))
+            if stop.secondary_image else None
+        )
         self._token_badge = (load_image(stop.token_image, (36, 36))
                              if stop.token_image else None)
-        # Reset fade each time a new stop opens
         self._fade_alpha = 200.0
+        self._scroll_y = 0
+        self._content_max_scroll = 0
 
     def handle_event(self, event: pygame.event.Event):
         if self._back_btn.handle_event(event):
@@ -78,6 +87,12 @@ class StopScreen(BaseScreen):
                 self.game.state.go_to(SCREEN_ROUTE)
             elif event.key in (pygame.K_SPACE, pygame.K_RETURN) and not self._token_collected:
                 self._collect_token()
+            elif event.key == pygame.K_DOWN:
+                self._scroll_y = min(self._scroll_y + 30, self._content_max_scroll)
+            elif event.key == pygame.K_UP:
+                self._scroll_y = max(self._scroll_y - 30, 0)
+        if event.type == pygame.MOUSEWHEEL:
+            self._scroll_y = max(0, min(self._scroll_y - event.y * 24, self._content_max_scroll))
 
     def _collect_token(self):
         if not self._stop:
@@ -88,7 +103,6 @@ class StopScreen(BaseScreen):
         self._collect_btn.visible = False
 
     def update(self, dt: float):
-        # Drain fade overlay
         if self._fade_alpha > 0:
             self._fade_alpha = max(0.0, self._fade_alpha - 220 * dt / 0.35)
 
@@ -111,7 +125,7 @@ class StopScreen(BaseScreen):
                           w - pad * 2,
                           [self._font_md, self._font_sm, self._font_xs])
 
-        # ── Top section: image (left) + token / categories (right) ──────
+        # ── Top section: image (left) + token / categories / what-happened (right) ──
         img_x, img_y = pad, 80
         img_rect = pygame.Rect(img_x, img_y, self.IMG_W, self.IMG_H)
 
@@ -123,7 +137,6 @@ class StopScreen(BaseScreen):
                                    stop.icon_label, stop.visual_theme, self._font_lg)
             surface.blit(ph, img_rect)
 
-        # Token badge + name
         right_x = img_x + self.IMG_W + pad
         right_w  = w - right_x - pad
 
@@ -135,8 +148,16 @@ class StopScreen(BaseScreen):
         tok_s = self._font_md.render(stop.token, True, C.TEAL_DARK)
         surface.blit(tok_s, (right_x + 48, img_y + 10))
 
-        # Category pills
+        # WASH focus label
         pill_y = img_y + 50
+        if stop.wash_focus:
+            wf_lbl = self._font_xs.render("WASH FOCUS", True, C.MID_GREY)
+            surface.blit(wf_lbl, (right_x, pill_y))
+            wf_val = self._font_xs.render(stop.wash_focus, True, C.DARK_GREY)
+            surface.blit(wf_val, (right_x + wf_lbl.get_width() + 6, pill_y))
+            pill_y += wf_lbl.get_height() + 4
+
+        # Category pills
         px = right_x
         for cat in stop.main_categories:
             cat_col = _CAT_COLOURS.get(cat, C.TEAL)
@@ -150,8 +171,10 @@ class StopScreen(BaseScreen):
             surface.blit(cat_s, cat_s.get_rect(center=pill_rect.center))
             px += pw + 6
 
-        # What Happened (new optional field)
-        wh_y = img_y + 92
+        pill_y += 28
+
+        # What Happened (top-right brief summary)
+        wh_y = pill_y
         if stop.what_happened:
             wh_lbl = self._font_xs.render("WHAT HAPPENED", True, C.MID_GREY)
             surface.blit(wh_lbl, (right_x, wh_y))
@@ -164,16 +187,22 @@ class StopScreen(BaseScreen):
         # ── Divider ──────────────────────────────────────────────────────
         section_top = max(img_y + self.IMG_H + 10, wh_y + 6)
         pygame.draw.line(surface, C.LIGHT_GREY, (pad, section_top), (w - pad, section_top))
-        y = section_top + 10
 
-        # ── Content sections ─────────────────────────────────────────────
-        def section(label, body, text_col=C.DARK_GREY, bold=False):
+        # ── Scrollable content area ───────────────────────────────────────
+        BOTTOM_BAR = 80
+        content_top = section_top + 2
+        content_bottom = h - BOTTOM_BAR
+        clip_rect = pygame.Rect(0, content_top, w, content_bottom - content_top)
+        surface.set_clip(clip_rect)
+
+        y = content_top + 8 - self._scroll_y
+
+        def section(label, body, text_col=C.DARK_GREY):
             nonlocal y
             lbl = self._font_xs.render(label.upper(), True, C.MID_GREY)
             surface.blit(lbl, (pad, y))
             y += lbl.get_height() + 2
-            font = self._font_sm
-            y = draw_wrapped_text(surface, body, font, text_col,
+            y = draw_wrapped_text(surface, body, self._font_sm, text_col,
                                   pad, y, w - pad * 2, line_spacing=4)
             y += C.PAD_SM
 
@@ -183,7 +212,7 @@ class StopScreen(BaseScreen):
         if stop.systems_insight:
             section("Systems Insight", stop.systems_insight, C.RUST)
 
-        # ── Field Note box ────────────────────────────────────────────────
+        # Field Note box
         note_lbl = self._font_xs.render("FIELD NOTE", True, C.MID_GREY)
         surface.blit(note_lbl, (pad, y))
         y += note_lbl.get_height() + 4
@@ -200,7 +229,21 @@ class StopScreen(BaseScreen):
             ny += self._font_sm.get_height() + 4
         y = note_rect.bottom + C.PAD_SM
 
-        # Reading tie (new optional field)
+        # Secondary image (treatment process diagram — Stop 9)
+        if self._secondary_image:
+            sec_lbl = self._font_xs.render("TREATMENT PROCESS", True, C.MID_GREY)
+            surface.blit(sec_lbl, (pad, y))
+            y += sec_lbl.get_height() + 4
+            surface.blit(self._secondary_image, (pad, y))
+            pygame.draw.rect(surface, C.TEAL, pygame.Rect(pad, y, _SEC_IMG_W, _SEC_IMG_H), 2, border_radius=4)
+            y += _SEC_IMG_H + C.PAD_SM
+            desc = ("Intake and pumping → Coagulation (alum) → Flocculation → "
+                    "Filtration → Chlorination → Quality assessment before distribution.")
+            y = draw_wrapped_text(surface, desc, self._font_xs, C.MID_GREY,
+                                  pad, y, w - pad * 2, line_spacing=3)
+            y += C.PAD_SM
+
+        # Reading tie
         if stop.reading_tie:
             rt_lbl = self._font_xs.render("READING TIE  ", True, C.MID_GREY)
             surface.blit(rt_lbl, (pad, y))
@@ -211,11 +254,21 @@ class StopScreen(BaseScreen):
                 line_spacing=3,
             )
 
+        y += C.PAD
+        self._content_max_scroll = max(0, y + self._scroll_y - content_bottom)
+        surface.set_clip(None)
+
+        # Scroll indicator
+        if self._content_max_scroll > 0:
+            scroll_hint = self._font_xs.render(
+                "↑↓ scroll or use mouse wheel", True, C.MID_GREY)
+            surface.blit(scroll_hint,
+                         (w // 2 - scroll_hint.get_width() // 2, content_bottom - 18))
+
         # ── Bottom buttons ────────────────────────────────────────────────
         if self._token_collected:
             done_s = self._font_md.render(f"{stop.token} collected!", True, C.TEAL_DARK)
             tr = done_s.get_rect(center=(w // 2, h - 48))
-            # Draw small checkmark to the left of the text
             ck_x, ck_y = tr.left - 14, tr.centery
             pygame.draw.lines(surface, C.TEAL, False,
                               [(ck_x - 5, ck_y),

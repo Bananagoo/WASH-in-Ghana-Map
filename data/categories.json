@@ -1,57 +1,57 @@
 [
   {
     "id": "health",
-    "name": "Health",
-    "description": "Waterborne disease, sanitation access, hygiene behaviour, healthcare systems, and physical and mental well-being shaped by water.",
+    "name": "Health & Wellbeing",
+    "description": "How WASH affects disease, stress, dignity, mental health, physical strain, nutrition, and access to care.",
     "color": [220, 80, 80],
     "map_position": { "x": 100, "y": 140 }
   },
   {
     "id": "infrastructure",
-    "name": "Infrastructure",
-    "description": "Pipes, treatment plants, latrines, sanitation chains, water points, and the physical systems that move water and waste.",
+    "name": "Infrastructure & Technology",
+    "description": "Pipes, pumps, toilets, latrines, treatment plants, testing tools, transport systems, maintenance, and design choices.",
     "color": [80, 130, 200],
     "map_position": { "x": 330, "y": 140 }
   },
   {
     "id": "governance",
-    "name": "Governance",
-    "description": "Policy, regulation, accountability, financing, data systems, and the institutions that manage water and sanitation services.",
+    "name": "Governance, Finance & Institutions",
+    "description": "Policies, agencies, tariffs, funding, accountability, regulation, public/private roles, and who is responsible for keeping systems working.",
     "color": [180, 100, 200],
     "map_position": { "x": 560, "y": 140 }
   },
   {
     "id": "culture",
-    "name": "Culture",
-    "description": "History, identity, tradition, spiritual relationships with water, and the social meanings that shape how water is used, protected, and understood.",
+    "name": "Culture, History & Place",
+    "description": "Sacred sites, local beliefs, colonial history, national identity, land, memory, and how people give meaning to water, sanitation, and development.",
     "color": [200, 150, 60],
     "map_position": { "x": 100, "y": 320 }
   },
   {
     "id": "gender",
-    "name": "Gender",
-    "description": "Gendered labour in water collection and care work, safety, dignity, women's participation in WASH decisions, and unequal burden-sharing.",
+    "name": "Gender, Equity & Safety",
+    "description": "Unequal WASH burdens, women's labour, safety, GBV, menstruation, class, age, access, dignity, and who is included in decision-making.",
     "color": [220, 100, 160],
     "map_position": { "x": 330, "y": 320 }
   },
   {
     "id": "climate",
-    "name": "Climate",
-    "description": "Rainfall variability, drought, flooding, ecosystem health, land use, and the environmental systems that shape water availability.",
+    "name": "Climate, Environment & Ecosystems",
+    "description": "Flooding, drought, forests, watersheds, pollution, biodiversity, land use, climate variability, and environmental protection.",
     "color": [60, 170, 120],
     "map_position": { "x": 560, "y": 320 }
   },
   {
     "id": "livelihoods",
-    "name": "Livelihoods",
-    "description": "Agriculture, income, economic survival, resource recovery, water-food linkages, and the ways water connects to how people earn and sustain life.",
+    "name": "Livelihoods & Economy",
+    "description": "Farming, markets, household income, costs of water/sanitation, productivity, tourism, food systems, and economic survival.",
     "color": [180, 160, 60],
     "map_position": { "x": 100, "y": 500 }
   },
   {
     "id": "knowledge",
-    "name": "Knowledge / Collaboration",
-    "description": "Research, data, education, community knowledge, Indigenous perspectives, knowledge mobilization, and the collaborative production of understanding.",
+    "name": "Data, Knowledge & Collaboration",
+    "description": "Water testing, monitoring, research, community knowledge, storytelling, photo-elicitation, peer learning, partnerships, and knowledge mobilization.",
     "color": [80, 160, 200],
     "map_position": { "x": 330, "y": 500 }
   }
