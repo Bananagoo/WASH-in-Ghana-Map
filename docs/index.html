@@ -23,7 +23,7 @@ from pathlib import Path
 # do not rename
 async def custom_site():
     import embed
-    platform.document.body.style.background = "#102f5f"
+    platform.document.body.style.background = "#0D1F3C"
 
     platform.window.transfer.hidden = true
     platform.window.canvas.style.visibility = "visible"
@@ -178,7 +178,7 @@ function show_infobox() {
 
 </script>
 
-    <title>wash_game</title>
+    <title>WASH in Ghana — Field Survey Game</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -205,17 +205,20 @@ function show_infobox() {
         }
 
         #infobox {
-            position: fixed; /* center relative to viewport */
-            background: green;
-            color: blue;
+            position: fixed;
+            background: #16325C;
+            color: #D2A532;
+            font-family: Arial, sans-serif;
+            font-size: 13px;
             font-weight: bold;
-            padding: 12px 24px;
- /*           display: none; */
+            padding: 10px 22px;
+            border: 1px solid #5F9BD7;
+            border-radius: 6px;
             z-index: 999999;
         }
         div.emscripten { text-align: center; }
-        div.emscripten_border { border: 1px solid black; }
-        div.thick_border { border: 4px solid black; }
+        div.emscripten_border { border: 1px solid #16325C; }
+        div.thick_border { border: 4px solid #16325C; }
 
         html, body {
             width: 100%;
@@ -223,19 +226,14 @@ function show_infobox() {
             overflow: hidden;
         }
 
-        /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
-        /* Keep the 1024x720 game aspect-fit in the browser viewport.
-           Capping at the native canvas size avoids soft text from browser upscaling. */
         canvas.emscripten {
             border: 0px none;
             background-color: transparent;
             width: min(100vw, 1024px, calc(100vh * 1.4222222222));
             height: min(100vh, 720px, calc(100vw * 0.703125));
             z-index: 5;
-
             padding: 0;
             margin: auto;
-
             position: absolute;
             top: 0;
             bottom: 0;
@@ -244,10 +242,88 @@ function show_infobox() {
         }
 
         body {
-            font-family: arial;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #102f5f;
+            background-color: #0D1F3C;
+        }
+
+        /* Loading screen overlay */
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            background: #0D1F3C;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            z-index: 10;
+        }
+
+        #loading-screen h1 {
+            color: #D2A532;
+            font-size: 26px;
+            letter-spacing: 3px;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        #loading-screen .subtitle {
+            color: #7AAAD0;
+            font-size: 12px;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        #loading-screen .img-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        #loading-screen img {
+            width: 300px;
+            height: 210px;
+            object-fit: cover;
+            border: 2px solid #D2A532;
+            border-radius: 6px;
+        }
+
+        #loading-screen .img-caption {
+            color: #7AAAD0;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        #loading-screen .bar-wrap {
+            width: 300px;
+            height: 6px;
+            background: #1C3560;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        #loading-screen .bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #C49A28, #E8C55A);
+            border-radius: 3px;
+            animation: pulse-load 2.2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-load {
+            0%   { width: 10%; opacity: 0.6; }
+            50%  { width: 80%; opacity: 1;   }
+            100% { width: 10%; opacity: 0.6; }
+        }
+
+        #loading-screen .loading-text {
+            color: #4A7AAA;
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
         }
 
         .topright{
@@ -271,14 +347,14 @@ function show_infobox() {
         .trinfo{
            position: relative;
            right: 0px;
-           border: 1px solid black;
+           border: 1px solid #16325C;
         }
 
         .framed{
            position: relative;
            top: 150px;
            right: 10px;
-           border: 1px solid black;
+           border: 1px solid #16325C;
         }
     </style>
 
@@ -295,12 +371,20 @@ function show_infobox() {
 
 <body>
 
-    <div id="transfer" align=center>
-<!--        <div class="spinner" id='spinner'></div> -->
-        <div class="emscripten" id="status">Downloading...</div>
-        <div class="emscripten">
-            <progress value="0" max="100" id="progress"></progress>
+    <div id="transfer" hidden></div>
+    <progress value="0" max="100" id="progress" hidden></progress>
+    <div id="status" hidden></div>
+
+    <!-- Custom loading screen -->
+    <div id="loading-screen">
+        <h1>WASH in Ghana</h1>
+        <p class="subtitle">SYDE 599 &nbsp;&middot;&nbsp; Knowledge Mobilization Field Survey</p>
+        <div class="img-wrap">
+            <img src="loading.jpg" alt="Construction sign at Ashesi University">
+            <p class="img-caption">Construction sign at Ashesi University</p>
         </div>
+        <div class="bar-wrap"><div class="bar-fill"></div></div>
+        <p class="loading-text">Loading&hellip;</p>
     </div>
 
 
@@ -366,6 +450,21 @@ frameborder="1"
 
     </div>
 
+
+    <script>
+    // Hide loading screen once the game canvas becomes visible
+    (function() {
+        const observer = new MutationObserver(function() {
+            const canvas = document.getElementById('canvas');
+            if (canvas && canvas.style.visibility === 'visible') {
+                const ls = document.getElementById('loading-screen');
+                if (ls) ls.style.display = 'none';
+                observer.disconnect();
+            }
+        });
+        observer.observe(document.body, { attributes: true, subtree: true, attributeFilter: ['style'] });
+    })();
+    </script>
 
     <div id="dlg" hidden>
         <input type="file" id="dlg_multifile" multiple accept="image/*">
