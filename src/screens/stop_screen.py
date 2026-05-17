@@ -334,9 +334,12 @@ class StopScreen(BaseScreen):
         # Scroll indicator
         if self._content_max_scroll > 0:
             scroll_hint = self._font_xs.render(
-                "scroll to see more", True, C.MID_GREY)
-            surface.blit(scroll_hint,
-                         (w // 2 - scroll_hint.get_width() // 2, content_bottom - 18))
+                "scroll to see more", True, C.WHITE)
+            hint_rect = scroll_hint.get_rect(center=(w // 2, content_bottom - 14))
+            bubble = hint_rect.inflate(18, 8)
+            pygame.draw.rect(surface, (45, 45, 45), bubble, border_radius=8)
+            pygame.draw.rect(surface, (110, 110, 110), bubble, 1, border_radius=8)
+            surface.blit(scroll_hint, hint_rect)
 
         # ── Bottom buttons ────────────────────────────────────────────────
         if self._token_collected:
