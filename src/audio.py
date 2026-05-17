@@ -31,7 +31,7 @@ class AudioManager:
     def _try_init(self):
         try:
             if not pygame.mixer.get_init():
-                pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=4096)
+                pygame.mixer.init()
             self.enabled = True
             self._load_sounds()
         except Exception:
