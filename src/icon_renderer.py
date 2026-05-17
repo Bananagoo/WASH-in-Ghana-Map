@@ -178,16 +178,46 @@ def _stream(s, cx, cy, r):
 
 
 def _toilet(s, cx, cy, r):
-    tw, th = int(r * 1.2), int(r * 0.7)
-    tc = (232, 236, 238)
-    pygame.draw.rect(s, tc, pygame.Rect(cx - tw // 2, cy - r + 2, tw, th), border_radius=2)
-    pygame.draw.rect(s, (198, 204, 207),
-                     pygame.Rect(cx - tw // 2, cy - r + 2, tw, th), width=1, border_radius=2)
-    bw = int(r * 1.55)
-    pygame.draw.ellipse(s, tc,
-                        pygame.Rect(cx - bw // 2, cy - r // 5, bw, int(r * 1.1)))
-    pygame.draw.ellipse(s, (198, 204, 207),
-                        pygame.Rect(cx - bw // 2, cy - r // 5, bw, int(r * 1.1)), width=1)
+    ceramic = (238, 242, 244)
+    shadow = (188, 198, 204)
+    rim = (116, 132, 142)
+    water = (122, 185, 220)
+
+    # Tank with lid and small flush button.
+    tank_w, tank_h = int(r * 1.25), max(5, int(r * 0.42))
+    tank = pygame.Rect(cx - tank_w // 2, cy - r + 2, tank_w, tank_h)
+    pygame.draw.rect(s, ceramic, tank, border_radius=2)
+    pygame.draw.rect(s, shadow, tank, 1, border_radius=2)
+    pygame.draw.line(s, rim, (tank.left + 2, tank.top + 2), (tank.right - 2, tank.top + 2), 1)
+    pygame.draw.rect(s, rim, pygame.Rect(cx + tank_w // 4, tank.top + 3, 3, 2), border_radius=1)
+
+    # Bowl and seat ring, with a blue inner water oval to make the form read.
+    bowl_w, bowl_h = int(r * 1.55), int(r * 0.92)
+    bowl = pygame.Rect(cx - bowl_w // 2, cy - r // 8, bowl_w, bowl_h)
+
+    # Connector neck overlaps both tank and bowl so the parts read as one fixture.
+    neck_w = max(5, r // 2)
+    neck = pygame.Rect(cx - neck_w // 2, tank.bottom - 1, neck_w, max(3, bowl.top - tank.bottom + 2))
+    pygame.draw.rect(s, ceramic, neck, border_radius=1)
+    pygame.draw.line(s, shadow, (neck.left, neck.top), (neck.left, neck.bottom), 1)
+    pygame.draw.line(s, shadow, (neck.right - 1, neck.top), (neck.right - 1, neck.bottom), 1)
+
+    pygame.draw.ellipse(s, ceramic, bowl)
+    pygame.draw.ellipse(s, shadow, bowl, 1)
+    seat = bowl.inflate(-max(4, r // 3), -max(3, r // 4))
+    seat.y += 1
+    pygame.draw.ellipse(s, water, seat)
+    pygame.draw.ellipse(s, rim, seat, 1)
+
+    # Small base/foot so it does not look like just an oval.
+    base_w = int(r * 1.05)
+    base_h = max(6, int(r * 0.55))
+    base = pygame.Rect(cx - base_w // 2, cy + int(r * 0.36), base_w, base_h)
+    pygame.draw.rect(s, ceramic, base, border_radius=1)
+    pygame.draw.rect(s, shadow, base, 1, border_radius=1)
+    foot_w = int(r * 1.25)
+    foot = pygame.Rect(cx - foot_w // 2, base.bottom - 2, foot_w, max(3, r // 5))
+    pygame.draw.rect(s, shadow, foot, border_radius=1)
 
 
 def _chart(s, cx, cy, r):

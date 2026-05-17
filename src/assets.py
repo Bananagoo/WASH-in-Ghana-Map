@@ -192,14 +192,42 @@ def _i_stream_stone(surf, cx, cy, r):
 
 
 def _i_toilet(surf, cx, cy, r):
-    tw, th = max(7, int(r * 1.05)), max(5, int(r * 0.48))
-    # tank
-    pygame.draw.rect(surf, (230, 232, 238), (cx - tw//2, cy - r + 1, tw, th), border_radius=3)
-    # bowl
-    bw, bh = max(8, int(r * 1.15)), max(6, int(r * 0.7))
-    pygame.draw.ellipse(surf, (238, 240, 245), (cx - bw//2, cy - r + th + 1, bw, bh))
-    # seat ring
-    pygame.draw.ellipse(surf, (200, 205, 210), (cx - bw//2, cy - r + th + 1, bw, bh), 2)
+    ceramic = (242, 246, 248)
+    shadow = (190, 202, 210)
+    rim = (95, 112, 124)
+    water = (120, 188, 225)
+
+    tank_w, tank_h = max(9, int(r * 1.15)), max(5, int(r * 0.38))
+    tank = pygame.Rect(cx - tank_w // 2, cy - r + 1, tank_w, tank_h)
+    pygame.draw.rect(surf, ceramic, tank, border_radius=3)
+    pygame.draw.rect(surf, shadow, tank, 1, border_radius=3)
+    pygame.draw.rect(surf, rim, (cx + tank_w // 4, tank.top + 3, 3, 2), border_radius=1)
+
+    bowl_w, bowl_h = max(12, int(r * 1.35)), max(8, int(r * 0.72))
+    bowl = pygame.Rect(cx - bowl_w // 2, cy - r // 8, bowl_w, bowl_h)
+
+    neck_w = max(5, r // 2)
+    neck = pygame.Rect(cx - neck_w // 2, tank.bottom - 1, neck_w, max(3, bowl.top - tank.bottom + 2))
+    pygame.draw.rect(surf, ceramic, neck, border_radius=1)
+    pygame.draw.line(surf, shadow, (neck.left, neck.top), (neck.left, neck.bottom), 1)
+    pygame.draw.line(surf, shadow, (neck.right - 1, neck.top), (neck.right - 1, neck.bottom), 1)
+
+    pygame.draw.ellipse(surf, ceramic, bowl)
+    pygame.draw.ellipse(surf, shadow, bowl, 1)
+
+    inner = bowl.inflate(-max(5, r // 2), -max(4, r // 3))
+    inner.y += 1
+    pygame.draw.ellipse(surf, water, inner)
+    pygame.draw.ellipse(surf, rim, inner, 1)
+
+    base_w = max(9, int(r * 0.95))
+    base_h = max(6, int(r * 0.5))
+    base = pygame.Rect(cx - base_w // 2, cy + int(r * 0.36), base_w, base_h)
+    pygame.draw.rect(surf, ceramic, base, border_radius=1)
+    pygame.draw.rect(surf, shadow, base, 1, border_radius=1)
+    foot_w = max(10, int(r * 1.15))
+    foot = pygame.Rect(cx - foot_w // 2, base.bottom - 2, foot_w, max(3, r // 5))
+    pygame.draw.rect(surf, shadow, foot, border_radius=1)
 
 
 def _i_histogram(surf, cx, cy, r):
