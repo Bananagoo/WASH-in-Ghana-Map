@@ -1,7 +1,7 @@
 {
   "title": "Mapping WASH",
   "subtitle": "A Systems Journey Through Ghana",
-  "course": "SYDE 599 — Systems Studies in Water, Environment, and Health",
+  "course": "SYDE 599 , Systems Studies in Water, Environment, and Health",
   "tutorial": [
     "Welcome to Mapping WASH, an interactive field-journal game based on SYDE 599: Systems Studies in Water, Environment, and Health. This course explores water, sanitation, and hygiene (WASH) through a mix of lectures, readings, field visits, guest speakers, community conversations, and personal reflection.",
     "In this journey, WASH is not treated as only pipes, pumps, toilets, or treatment plants. Those physical pieces matter, but they are only the hardware of the system. Just as important is the software: governance, financing, education, culture, trust, maintenance, behaviour change, community ownership, and the people responsible for keeping systems working. Each location on the route shows how WASH connects technical systems with health, politics, history, gender, climate, livelihoods, and lived experience.",
@@ -15,7 +15,7 @@
   "journal_empty": "No tokens collected yet. Visit your first stop.",
   "journal_back_button": "Back",
   "map_title": "Build the WASH Systems Diagram",
-  "map_instructions": "Drag each token from the tray on the left onto one of the eight WASH dimension cards. Each token belongs to at least one dimension — choose the one that fits best.",
+  "map_instructions": "Drag each token from the tray on the left onto one of the eight WASH dimension cards. Each token belongs to at least one dimension , choose the one that fits best.",
   "map_select_prompt": "Drag a token from the left tray onto a dimension card.",
   "map_token_placed": "Token placed! Drag another or compare your diagram when all 16 are placed.",
   "map_finish_button": "Compare My Diagram →",
@@ -36,13 +36,13 @@
     "Water quality connected to health. Sanitation connected to governance. Clinics connected to infrastructure and inequity. Gender and WASH connected to labour, dignity, and safety. Climate and livelihoods connected water to agriculture, flooding, forests, and economic survival.",
     "No single token captures the whole system. That is the point."
   ],
-  "final_credit": "SYDE 599 Knowledge Mobilization — Katherine Langille, 2026",
+  "final_credit": "SYDE 599 Knowledge Mobilization , Katherine Langille, 2026",
   "final_restart_button": "Play Again",
   "feedback_messages": {
     "perfect": "You mapped every token to its primary system dimension. You have a strong sense of how these pieces connect.",
-    "high": "Most of your placements matched the key dimensions. WASH systems are complex — some tokens genuinely fit multiple dimensions.",
+    "high": "Most of your placements matched the key dimensions. WASH systems are complex , some tokens genuinely fit multiple dimensions.",
     "mid": "A few placements differed from the primary dimensions. The connections in WASH systems are not always obvious. Review the field notes to see what you might have missed.",
-    "low": "Several placements differed from the primary dimensions. Consider re-reading the field notes — each stop reveals a different dimension of the WASH system.",
+    "low": "Several placements differed from the primary dimensions. Consider re-reading the field notes , each stop reveals a different dimension of the WASH system.",
     "note": "Note: many tokens belong to multiple dimensions. This score reflects primary categorization only."
   }
 }
