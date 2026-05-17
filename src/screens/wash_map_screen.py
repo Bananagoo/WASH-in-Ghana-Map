@@ -152,10 +152,10 @@ class WashMapScreen(BaseScreen):
             else:
                 ex = card_rect.left  if nx > _HUB_CX else card_rect.right
                 ey = card_rect.bottom if ny < _HUB_CY else card_rect.top
-                # Extend under the rounded card corner so diagonal spokes
-                # visually meet the box edge instead of stopping short.
-                ex += 10 if nx > _HUB_CX else -10
-                ey += 10 if ny < _HUB_CY else -10
+                # Push 12px inside the card so the line is hidden under the
+                # card face and appears to terminate right at the corner.
+                ex += 12 if nx > _HUB_CX else -12
+                ey += -12 if ny < _HUB_CY else 12
                 spoke_end = (ex, ey)
 
             # Two slots: start past the 5px colour strip (strip ends at left+7, add 3px gap)
