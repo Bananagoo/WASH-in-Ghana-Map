@@ -126,6 +126,9 @@ class WashMapScreen(BaseScreen):
             tok: token_badge(tok, size=BADGE_SZ)
             for tok in self.game.state.collected_tokens
         }
+        self._token_locations = {
+            stop.token: stop.title for stop in self.game.stops if stop.token
+        }
 
         # Show instructions on first entry per session
         if not hasattr(self, "_intro_shown"):
@@ -345,14 +348,20 @@ class WashMapScreen(BaseScreen):
         # ── Tooltip (hover) ───────────────────────────────────────────────────
         if self._hover_token and _TOKEN_REMINDERS.get(self._hover_token):
             reminder  = _TOKEN_REMINDERS[self._hover_token]
-            tip_rect  = pygame.Rect(TRAY_W + 8, h - BOTTOM_H - 50, w - TRAY_W - 16, 46)
+            loc_name  = self._token_locations.get(self._hover_token, "")
+            tip_rect  = pygame.Rect(TRAY_W + 8, h - BOTTOM_H - 66, w - TRAY_W - 16, 62)
             pygame.draw.rect(surface, (20, 38, 68), tip_rect, border_radius=6)
             pygame.draw.rect(surface, C.GOLD, tip_rect, 1, border_radius=6)
-            name_s = self._font_xs.render(f"{self._hover_token}: ", True, C.GOLD_LIGHT)
-            surface.blit(name_s, (tip_rect.left + 8, tip_rect.top + 6))
+            ty_ = tip_rect.top + 6
+            name_s = self._font_xs.render(self._hover_token, True, C.GOLD_LIGHT)
+            surface.blit(name_s, (tip_rect.left + 8, ty_))
+            if loc_name:
+                loc_s = self._font_xs.render(f"  |  {loc_name}", True, C.TEAL_LIGHT)
+                surface.blit(loc_s, (tip_rect.left + 8 + name_s.get_width(), ty_))
+            ty_ += name_s.get_height() + 3
             draw_wrapped_text(
                 surface, reminder, self._font_xs, C.OFF_WHITE,
-                tip_rect.left + 8, tip_rect.top + 6 + name_s.get_height() + 2,
+                tip_rect.left + 8, ty_,
                 tip_rect.width - 16, line_spacing=2,
             )
 

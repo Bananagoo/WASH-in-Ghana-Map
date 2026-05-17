@@ -16,6 +16,7 @@ _DOT         = (28, 58, 108)
 
 _FRONT_IMG_W = 300
 _FRONT_IMG_H = 220
+_FRONT_IMG_CAPTION = "Image of the group with the CEWEFIA team"
 
 
 def _draw_dot_pattern(surface, rect, colour, spacing=28):
@@ -111,6 +112,9 @@ class TitleScreen(BaseScreen):
         if self._front_image:
             surface.blit(self._front_image, image_rect)
             pygame.draw.rect(surface, _PANEL_BDR, image_rect, 2, border_radius=4)
+            cap_s = self._font_xs.render(_FRONT_IMG_CAPTION, True, C.MID_GREY)
+            cap_x = image_rect.centerx - cap_s.get_width() // 2
+            surface.blit(cap_s, (cap_x, image_rect.bottom + 4))
         else:
             image_rect = pygame.Rect(0, 0, 0, 0)
 
