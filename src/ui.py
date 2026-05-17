@@ -2,6 +2,8 @@ import pygame
 from typing import Callable, Optional, Tuple
 from src import config as C
 
+WRAP_SAFETY = 0.78
+
 
 class Button:
     def __init__(
@@ -56,6 +58,7 @@ class Panel:
 
 
 def wrap_text(text: str, font: pygame.font.Font, max_width: int):
+    max_width = int(max_width * WRAP_SAFETY)
     words = text.split()
     lines = []
     current = []

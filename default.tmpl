@@ -156,7 +156,7 @@ config = {
     cdn : "{{cookiecutter.cdn}}",
     autorun : {{cookiecutter.autorun}},
     PYBUILD : "{{cookiecutter.PYBUILD}}",
-    fb_ar   :  1.77,
+    fb_ar   :  1.4222222222,
     fb_width : "{{cookiecutter.width}}",
     fb_height : "{{cookiecutter.height}}"
 }
@@ -224,12 +224,13 @@ function show_infobox() {
         }
 
         /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
-        /* Keep the game aspect-fit in the browser viewport so the map and side panel are not cropped. */
+        /* Keep the 1024x720 game aspect-fit in the browser viewport.
+           Capping at the native canvas size avoids soft text from browser upscaling. */
         canvas.emscripten {
             border: 0px none;
             background-color: transparent;
-            width: min(100vw, calc(100vh * 1.4222222222));
-            height: min(100vh, calc(100vw * 0.703125));
+            width: min(100vw, 1024px, calc(100vh * 1.4222222222));
+            height: min(100vh, 720px, calc(100vw * 0.703125));
             z-index: 5;
 
             padding: 0;

@@ -107,8 +107,9 @@ class StopScreen(BaseScreen):
         num_s = self._font_lg.render(
             f"Stop {stop.id} of {len(self.game.stops)}", True, C.GOLD_LIGHT)
         surface.blit(num_s, (pad, 8))
-        title_s = self._font_md.render(stop.title, True, C.WHITE)
-        surface.blit(title_s, (pad, 36))
+        _draw_fitted_line(surface, stop.title, C.WHITE, pad, 36,
+                          w - pad * 2,
+                          [self._font_md, self._font_sm, self._font_xs])
 
         # ── Top section: image (left) + token / categories (right) ──────
         img_x, img_y = pad, 80
@@ -202,9 +203,13 @@ class StopScreen(BaseScreen):
         # Reading tie (new optional field)
         if stop.reading_tie:
             rt_lbl = self._font_xs.render("READING TIE  ", True, C.MID_GREY)
-            rt_txt = self._font_xs.render(stop.reading_tie, True, C.MID_GREY)
             surface.blit(rt_lbl, (pad, y))
-            surface.blit(rt_txt, (pad + rt_lbl.get_width(), y))
+            y = draw_wrapped_text(
+                surface, stop.reading_tie, self._font_xs, C.MID_GREY,
+                pad + rt_lbl.get_width(), y,
+                w - pad * 2 - rt_lbl.get_width(),
+                line_spacing=3,
+            )
 
         # ── Bottom buttons ────────────────────────────────────────────────
         if self._token_collected:
@@ -234,6 +239,7 @@ class StopScreen(BaseScreen):
 
 
 def _wrap(text, font, max_w):
+    max_w = int(max_w * 0.78)
     words = text.split()
     lines, cur = [], []
     for word in words:
@@ -247,3 +253,17 @@ def _wrap(text, font, max_w):
     if cur:
         lines.append(" ".join(cur))
     return lines
+
+
+def _draw_fitted_line(surface, text, colour, x, y, max_w, fonts):
+    for font in fonts:
+        if font.size(text)[0] <= max_w:
+            surface.blit(font.render(text, True, colour), (x, y))
+            return
+
+    font = fonts[-1]
+    ellipsis = "..."
+    trimmed = text
+    while trimmed and font.size(trimmed + ellipsis)[0] > max_w:
+        trimmed = trimmed[:-1].rstrip()
+    surface.blit(font.render(trimmed + ellipsis, True, colour), (x, y))
