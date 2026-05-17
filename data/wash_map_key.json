@@ -1,12 +1,36 @@
 {
   "answer_key": {
-    "health":         ["First Aid Cross", "Bar of Soap"],
-    "infrastructure": ["Sludge Truck",    "Pipe Valve"],
-    "governance":     ["Black Star Coin", "Stream Stone"],
-    "culture":        ["Field Passport",  "Shell"],
-    "gender":         ["Toilet",          "Camera"],
-    "climate":        ["Bamboo",          "Canopy Leaf"],
-    "livelihoods":    ["Fish",            "Cocoa Pod"],
-    "knowledge":      ["Test Strip",      "Histogram"]
+    "health": [
+      "First Aid Cross",
+      "Bar of Soap"
+    ],
+    "infrastructure": [
+      "Sludge Truck",
+      "Pipe Valve"
+    ],
+    "governance": [
+      "Black Star Coin",
+      "Stream Stone"
+    ],
+    "culture": [
+      "Field Passport",
+      "Shell"
+    ],
+    "gender": [
+      "Fish",
+      "Camera"
+    ],
+    "climate": [
+      "Bamboo",
+      "Canopy Leaf"
+    ],
+    "livelihoods": [
+      "Toilet",
+      "Cocoa Pod"
+    ],
+    "knowledge": [
+      "Test Strip",
+      "Histogram"
+    ]
   }
 }
