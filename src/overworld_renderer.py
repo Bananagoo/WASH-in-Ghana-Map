@@ -4,8 +4,9 @@ Overworld background renderer.
 Pre-renders once to a pygame.Surface; route_screen blits it every frame.
 Layers (bottom to top):
   1. Tiled 16px Sunnyside grass (falls back to solid fill)
-  2. Bézier dirt path (circle-stamped for smooth round edges)
-  3. Sunnyside tree, crop, and animal sprites scattered off the path
+  2. Small stream/lake feature
+  3. Bézier dirt path (circle-stamped for smooth round edges)
+  4. Sunnyside tree, crop, and animal sprites scattered off the path
 """
 import math
 import os
@@ -18,6 +19,12 @@ R = pygame.Rect
 _PE = (118, 82, 42)     # path edge (dark earth)
 _PS = (178, 140, 88)    # path surface (warm tan)
 _PC = (200, 168, 110)   # path centre highlight
+
+# ── Water colours ─────────────────────────────────────────────────────────────
+_W_SHORE = (82, 126, 80)
+_W_EDGE  = (50, 116, 160)
+_W_DEEP  = (36, 132, 190)
+_W_LIGHT = (92, 184, 218)
 
 # ── Fallback fill colour (used if tileset is missing) ─────────────────────────
 _G_BASE = (100, 148, 68)
@@ -83,11 +90,16 @@ class OverworldRenderer:
         if grass_tiles:
             _draw_tiled_grass(surf, grass_tiles)
 
-        # 2. Path
+        # 2. Water feature
+        water_curve = self._draw_water_feature(surf)
+
+        # 3. Path
         self._draw_path(surf, pts, self._curve)
 
-        # 3. Scattered scenery sprites
-        self._scatter(surf, pts, self._curve, rng, tree_sprites, scenery_sprites)
+        # 4. Scattered scenery sprites
+        self._scatter(
+            surf, pts, self._curve, water_curve, rng, tree_sprites, scenery_sprites
+        )
 
         self._surface = surf
 
@@ -171,28 +183,67 @@ class OverworldRenderer:
         for px, py in curve:
             pygame.draw.circle(surf, _PC, (int(px), int(py)), rc)
 
+    # ── Water ─────────────────────────────────────────────────────────────────
+
+    def _draw_water_feature(self, surf):
+        """Draw a compact stream and pond in the open top-right map corner."""
+        anchors = [
+            (self._w - 26, 28),
+            (self._w - 92, 54),
+            (self._w - 150, 38),
+            (self._w - 206, 72),
+            (self._w - 252, 48),
+        ]
+        curve = _smooth_polyline(anchors, samples_per_seg=18)
+
+        for px, py in curve:
+            pygame.draw.circle(surf, _W_SHORE, (px, py), 30)
+        for px, py in curve:
+            pygame.draw.circle(surf, _W_EDGE, (px, py), 25)
+        for px, py in curve:
+            pygame.draw.circle(surf, _W_DEEP, (px, py), 20)
+        for i, (px, py) in enumerate(curve[::18]):
+            pygame.draw.arc(
+                surf, _W_LIGHT,
+                pygame.Rect(px - 14, py - 7, 28, 14),
+                0.15, 2.6, 2,
+            )
+
+        pond = pygame.Rect(self._w - 142, 86, 108, 72)
+        pygame.draw.ellipse(surf, _W_SHORE, pond.inflate(16, 12))
+        pygame.draw.ellipse(surf, _W_EDGE, pond.inflate(8, 6))
+        pygame.draw.ellipse(surf, _W_DEEP, pond)
+        pygame.draw.arc(surf, _W_LIGHT, pond.inflate(-26, -30), 0.2, 2.7, 2)
+
+        return curve + [
+            (pond.centerx - 30, pond.centery),
+            pond.center,
+            (pond.centerx + 30, pond.centery),
+        ]
+
     # ── Scatter ───────────────────────────────────────────────────────────────
 
-    def _scatter(self, surf, stop_pts, curve, rng, tree_sprites, scenery_sprites):
+    def _scatter(self, surf, stop_pts, curve, water_curve, rng,
+                 tree_sprites, scenery_sprites):
         placed: list = []
 
         if tree_sprites:
             self._scatter_group(
-                surf, stop_pts, curve, rng, tree_sprites, placed,
+                surf, stop_pts, curve, water_curve, rng, tree_sprites, placed,
                 attempts=800, stop_clearance=100, path_clearance=55,
-                object_clearance=54, max_count=48,
+                water_clearance=52, object_clearance=54, max_count=48,
             )
 
         if scenery_sprites:
             self._scatter_group(
-                surf, stop_pts, curve, rng, scenery_sprites, placed,
+                surf, stop_pts, curve, water_curve, rng, scenery_sprites, placed,
                 attempts=240, stop_clearance=74, path_clearance=42,
-                object_clearance=84, max_count=14,
+                water_clearance=38, object_clearance=84, max_count=14,
             )
 
-    def _scatter_group(self, surf, stop_pts, curve, rng, sprites, placed,
-                       attempts, stop_clearance, path_clearance, object_clearance,
-                       max_count):
+    def _scatter_group(self, surf, stop_pts, curve, water_curve, rng, sprites,
+                       placed, attempts, stop_clearance, path_clearance,
+                       water_clearance, object_clearance, max_count):
         count = 0
         for _ in range(attempts):
             if count >= max_count:
@@ -204,6 +255,8 @@ class OverworldRenderer:
             if any(math.hypot(x-px, y-py) < stop_clearance for px, py in stop_pts):
                 continue
             if _near_points(x, y, curve, path_clearance):
+                continue
+            if _near_points(x, y, water_curve, water_clearance):
                 continue
             if any(math.hypot(x-ox, y-oy) < object_clearance for ox, oy in placed):
                 continue
@@ -417,6 +470,33 @@ def _blit_sprite(surf: pygame.Surface, x: int, y: int,
 
 
 # ── Geometry helper ───────────────────────────────────────────────────────────
+
+def _smooth_polyline(points, samples_per_seg=12):
+    if len(points) < 2:
+        return list(points)
+
+    out = [points[0]]
+    for i in range(len(points) - 1):
+        p0 = points[max(i - 1, 0)]
+        p1 = points[i]
+        p2 = points[i + 1]
+        p3 = points[min(i + 2, len(points) - 1)]
+
+        m1 = ((p2[0] - p0[0]) * 0.28, (p2[1] - p0[1]) * 0.28)
+        m2 = ((p3[0] - p1[0]) * 0.28, (p3[1] - p1[1]) * 0.28)
+
+        for j in range(1, samples_per_seg + 1):
+            t = j / samples_per_seg
+            t2 = t * t
+            t3 = t2 * t
+            h00 = 2 * t3 - 3 * t2 + 1
+            h10 = t3 - 2 * t2 + t
+            h01 = -2 * t3 + 3 * t2
+            h11 = t3 - t2
+            x = h00 * p1[0] + h10 * m1[0] + h01 * p2[0] + h11 * m2[0]
+            y = h00 * p1[1] + h10 * m1[1] + h01 * p2[1] + h11 * m2[1]
+            out.append((round(x), round(y)))
+    return out
 
 def _near_seg(x, y, pts, threshold):
     for i in range(len(pts) - 1):
